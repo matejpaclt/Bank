@@ -1,0 +1,4 @@
+1,John,Doe,john.doe@example.com,$2a$10$hFUeuS1gRvkMKYLS3OHBoeO0Jbu1ZwB9T8NDupwttZV4NZsnVBWNW
+2,Jane,Doe,jane.doe@example.com,$2a$10$9VN3fJwercnQ4zzGGrDHZu72.hWlYGJ5Dp.ih6lQVyoAHvw9RIyAu
+3,Joe,Biden,joe.biden@example.com,$2a$10$R0c86yQ6d52sppCtiOQia.3t10UjOWRqJ.V5Y5Ma.OVkKXzDhXweS
+4,Matej,Paclt,matej.paclt@tul.cz,$2a$10$q3ZH/zfrPxGWeIhgaYmMJ.YLGC1Kdr9t1LRCdlWLUvXDu44c9aWsK
