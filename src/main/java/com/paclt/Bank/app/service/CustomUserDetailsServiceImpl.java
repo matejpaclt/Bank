@@ -48,9 +48,11 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
 
         String address = user.getEmail();
-        String content = "Prosím potvrďte přihlášení ná váš účet kliknutím na link níže / Please click the link below to verify your account: \n\n" + "<a href='http://localhost:8080/confirm?token=" + token + "'>http://localhost:8080/confirm?token=" + token + "</a>";
-        emailSender.send(address,content);
-        System.out.println("http://localhost:8080/confirm?token=" + token);
+        String appUrl = "https://stark-basin-93530.herokuapp.com"; // Replace with your Heroku app URL
+        String content = "Prosím potvrďte přihlášení ná váš účet kliknutím na link níže / Please click the link below to verify your account: \n\n" +
+                "<a href='" + appUrl + "/confirm?token=" + token + "'>" + appUrl + "/confirm?token=" + token + "</a>";
+        emailSender.send(address, content);
+        System.out.println(appUrl + "/confirm?token=" + token);
 
 
         Optional<ConfirmationToken> optionalToken = confirmationTokenService.getToken(token);
@@ -64,6 +66,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
         }
         return new CustomUserDetailsService(user);
     }
+
 
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService.getToken(token)
