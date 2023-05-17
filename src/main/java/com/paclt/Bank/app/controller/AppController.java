@@ -73,8 +73,9 @@ public class AppController {
             return handleDeposit(amount, model, accountType, authentication);
         } else if (action.equals("withdraw")) {
             return handlePayment(amount, model, accountType, authentication);
+        } else if (action.equals("open")) {
+            return handleOpen(amount, model, accountType, authentication);
         }
-
         return "redirect:/dashboard";
     }
 
@@ -154,34 +155,36 @@ public class AppController {
             return "dashboard";
     }
 
-        @PostMapping("/open")
-        public String handleOpen(@RequestParam("account-type-open") String accountType, Model model, Authentication authentication) throws IOException {
-            String message = "Účet byl úspěšně otevřen";
-            String name = authentication.getName();
-            long id = UserRepository.getId(name);
+    @PostMapping("/open")
+    public String handleOpen(@RequestParam("amount") BigDecimal amount, Model model,
+                             @RequestParam("account-type") String accountType,
+                             Authentication authentication) throws IOException {
+        String message = "Účet byl úspěšně otevřen";
+        String name = authentication.getName();
+        long id = UserRepository.getId(name);
 
-            if (!UserService.accountExists(id, accountType)) {
-                UserService.addAccount(id, accountType, 0);
-                state = true;
-            } else {
-                state = false;
-                message = "Omlouváme se, účet nebyl otevřen. Již máte otevřený účet v měně " + accountType;
-            }
-
-            User user = UserRepository.findUser(id);
-            model.addAttribute("user", user);
-            List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
-            model.addAttribute("listAccounts", listAccounts);
-            List<String> listOfLogs = UserService.readLog(user.getId());
-            model.addAttribute("listOfLogs", listOfLogs);
-            model.addAttribute("show", true);
-            model.addAttribute("success", state);
-            model.addAttribute("message", message);
-
-            List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
-            model.addAttribute("listExchangeRates", listExchangeRates);
-
-            return "dashboard";
+        if (!UserService.accountExists(id, accountType)) {
+            UserService.addAccount(id, accountType, amount);
+            state = true;
+        } else {
+            state = false;
+            message = "Omlouváme se, účet nebyl otevřen. Již máte otevřený účet v měně " + accountType;
         }
+
+        User user = UserRepository.findUser(id);
+        model.addAttribute("user", user);
+        List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
+        model.addAttribute("listAccounts", listAccounts);
+        List<String> listOfLogs = UserService.readLog(user.getId());
+        model.addAttribute("listOfLogs", listOfLogs);
+        model.addAttribute("show", true);
+        model.addAttribute("success", state);
+        model.addAttribute("message", message);
+
+        List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
+        model.addAttribute("listExchangeRates", listExchangeRates);
+
+        return "dashboard";
+    }
     }
 

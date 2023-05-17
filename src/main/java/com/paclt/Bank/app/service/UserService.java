@@ -3,6 +3,7 @@ package com.paclt.Bank.app.service;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,7 +42,7 @@ public class UserService {
         }
     }
 
-    public static void addAccount(long id, String type, double amount) {
+    public static void addAccount(long id, String type, BigDecimal amount) {
         String filePath = String.format("data/%d.txt", id);
         File file = new File(filePath);
         if (!file.exists()) {
@@ -246,7 +247,7 @@ public class UserService {
 
             List<String> lines = new ArrayList<>(Files.readAllLines(filePath, StandardCharsets.UTF_8));
 
-            if (lines.size() >= 5) {
+            if (lines.size() >= 10) {
                 lines.remove(0);
             }
             LocalDateTime now = LocalDateTime.now();

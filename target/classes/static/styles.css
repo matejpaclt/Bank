@@ -28,24 +28,33 @@ h1 {
     padding: 1rem;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 
 .login-container h1 {
     text-align: center;
     margin-bottom: 1.5rem;
+    justify-content: center;
 }
 
 /* Form */
 form {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin: 10px;
 }
 
 form div {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+
 }
 
 form label {
@@ -92,32 +101,15 @@ button[type="submit"]:hover {
     background-color: #0854c7;
 }
 
-.submit-button {
-    padding: 8px 16px;
-    border: none;
-    background-color: #087cfc;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    border-radius: 4px;
-    font-size: 1em;
-}
-
-.submit-button:hover {
-    background-color: #0854c7;
-}
-
-.infoColumns {
-    display: flex;
-}
-
 .leftCol {
     width: 80px;
     margin: 0;
+    flex: 1;
 }
 
 .rightCol {
     margin-left: 8px;
+    flex: 1;
 }
 .bank-name {
     font-weight: bold;
@@ -131,21 +123,30 @@ button[type="submit"]:hover {
 
 .mainContent {
     padding: 16px;
-}
-
-.info-container {
     display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
 }
-
+.box {
+    flex: 1;
+    margin: 10px;
+    border-radius: 4px;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+}
+.info-table{
+    width: 100%;
+    text-align: center;
+}
+.info-table th,
+.info-table td {
+    padding: 10px;
+}
 form input,
 form select {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 8px;
-    width: 100%;
     box-sizing: border-box;
     vertical-align: middle;
 }
@@ -167,7 +168,47 @@ label {
     font-weight: bold;
     margin-right: 8px;
 }
+
+.fill-out-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+    width: 50%;
+}
+
+.fill-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-button {
+    padding: 12px 120px;
+    border: none;
+    background-color: #087cfc;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 4px;
+    font-size: 1em;
+    margin: 15px;
+}
+
+.submit-button:hover {
+    background-color: #0854c7;
+}
+
 .form-container {
-    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 

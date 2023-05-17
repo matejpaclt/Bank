@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeLeaf.org">
+<html xmlns:th="http://www.thymeLeaf.org" lang="cs">
 <head>
     <meta charset="UTF-8">
     <title>Bankovní aplikace</title>
@@ -24,12 +24,15 @@
 
 <header>
     <h1 class="bank-name">Bankovní aplikace</h1>
+    <div class="user-info">
+        <p th:text="${user.firstName} + ' ' + ${user.lastName}">Name Surname</p>
+        <p th:text="${#authentication.getName()}">email</p>
+    </div>
     <div class="logoutSection">
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Odhlásit se"/>
         </form>
     </div>
-
 </header>
 <div class="message-container" th:if="${show}">
     <div th:if="${success}" class="alert alert-success">
@@ -40,28 +43,29 @@
     </div>
 </div>
 <div class="mainContent">
-    <div class="info-container">
-        <div class="infoColumns">
-            <div class="leftCol">
-                <p>Uživatel: </p>
-                <p>Id: </p>
-                <p>E-mail: </p>
-            </div>
-            <div class="rightCol">
-                <p th:text="${user.firstName} + ' ' + ${user.lastName}">Name Surname</p>
-                <p th:text="${user.id}">id</p>
-                <p th:text="${#authentication.getName()}">email</p>
-            </div>
-        </div>
+    <div class="box">
+        <table class="info-table">
+            <tr>
+                <th>Účet</th>
+                <th>Zůstatek na účtu</th>
+            </tr>
+            <th:block th:each="account: ${listAccounts}">
+                <tr>
+                    <td th:text="${account.getName}" style="color: #007bff; font-weight: bold;"></td>
+                    <td th:text="${account.getBalance}" style="color: #007bff;"></td>
+                </tr>
+            </th:block>
+        </table>
     </div>
+    <div class="box">
     <form class="form-container" method="post" th:action="@{/transaction}">
-        <div>
-            <label for="amount"/>
-            <input type="text" id="amount" name="amount" required>
+        <div class="fill-out-container">
+            <label for="amount"></label>
+            <input class="fill-input" type="text" id="amount" name="amount" required>
         </div>
-        <div>
-            <label for="account-type"/>
-            <select id="account-type" name="account-type">
+        <div class="fill-out-container">
+            <label for="account-type"></label>
+            <select class="fill-input" id="account-type" name="account-type">
                 <option value="CZK">Kč CZK</option>
                 <option value="AUD">$ AUD</option>
                 <option value="BRL">$ BRL</option>
@@ -96,80 +100,28 @@
                 <option value="GBP">£ GBP</option>
             </select>
         </div>
-        <div class="buttons-container">
-            <button type="submit" name="action" value="deposit" class="submit-button" th:formaction="@{/transaction}">Deposit</button>
-            <button type="submit" name="action" value="withdraw" class="submit-button" th:formaction="@{/transaction}">Withdraw</button>
-        </div>
-    </form>
-    </form>
-    <div class="mainContent">
-        <div class="info-container">
-            <div class="infoColumns">
-                <div class="leftCol">
-                    <p>Účet</p>
-                    <th:block th:each="account: ${listAccounts}">
-                        <p th:text="${account.getName}" style="color: #007bff; font-weight: bold;"></p>
-                    </th:block>
-                </div>
-                <div class="rightCol">
-                    <p>Zůstatek na účtu</p>
-                    <th:block th:each="account: ${listAccounts}">
-                        <p th:text="${account.getBalance}" style="color: #007bff;"></p>
-                    </th:block>
-                </div>
-            </div>
-        </div>
-    </div>
-    <form class="form-container" method="post" th:action="@{/open}">
-        <div>
-            <label for="account-type-open"/>
-            <select id="account-type-open" name="account-type-open">
-                <option value="CZK">Kč CZK</option>
-                <option value="AUD">$ AUD</option>
-                <option value="BRL">$ BRL</option>
-                <option value="BGN">Lev BGN</option>
-                <option value="CNY">¥ CNY</option>
-                <option value="DKK">kr DKK</option>
-                <option value="EUR">€ EUR</option>
-                <option value="PHP">₱ PHP</option>
-                <option value="HKD">$ HKD</option>
-                <option value="INR">₹ INR</option>
-                <option value="IDR">Rp IDR</option>
-                <option value="ISK">kr ISK</option>
-                <option value="ILS">₪ ILS</option>
-                <option value="JPY">¥ JPY</option>
-                <option value="ZAR">R ZAR</option>
-                <option value="CAD">$ CAD</option>
-                <option value="KRW">₩ KRW</option>
-                <option value="HUF">Ft HUF</option>
-                <option value="MYR">RM MYR</option>
-                <option value="MXN">$ MXN</option>
-                <option value="XDR">SDR XDR</option>
-                <option value="NOK">kr NOK</option>
-                <option value="NZD">$ NZD</option>
-                <option value="PLN">zł PLN</option>
-                <option value="RON">lei RON</option>
-                <option value="SGD">$ SGD</option>
-                <option value="SEK">kr SEK</option>
-                <option value="CHF">fr CHF</option>
-                <option value="THB">฿ THB</option>
-                <option value="TRY">₺ TRY</option>
-                <option value="USD">$ USD</option>
-                <option value="GBP">£ GBP</option>
-            </select>
-        </div>
-        <div class="form-container">
+        <div class="fill-out-container">
+            <button type="submit" name="action" value="deposit" class="submit-button" th:formaction="@{/transaction}">Vklad</button>
+            <button type="submit" name="action" value="withdraw" class="submit-button" th:formaction="@{/transaction}">Výběr</button>
             <button type="submit" name="action" class="submit-button" th:formaction="@{/open}">Založit nový účet</button>
         </div>
     </form>
-    <br>
-    <div class="logs">
-        <p>Výpis posledních pohybů na účtu</p>
-        <th:block th:each="log: ${listOfLogs}">
-            <p th:text="${log}" style="color: #007bff;"></p>
-        </th:block>
     </div>
+    <div class="box">
+        <table class="info-table">
+            <tr>
+                <th>Výpis posledních pohybů na účtu</th>
+            </tr>
+            <th:block th:each="log: ${listOfLogs}">
+                <tr>
+                    <td th:text="${log}" style="color: #007bff;"></td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+</div>
     <br>
+    </div>
     <div class="right-exchange">
         <button type="button" data-toggle="modal" class="submit-button" data-target="#exampleModal">
             Aktuální kurzy
@@ -216,8 +168,6 @@
         </div>
     </div>
 
-</div>
-</div>
 </body>
 
 <script>
