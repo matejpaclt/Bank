@@ -77,13 +77,14 @@ public class ConfirmationTokenService {
                     writer1.write(tokenData[0] + "," + tokenData[1] + ","
                             + tokenData[2] + "," + confirmed + ","
                             + tokenData[4]);
-                    writer1.newLine();
+                    writer1.newLine(); // Add this line to append a newline character
                     rowsAffected++;
                 } else {
                     writer1.write(line);
                     writer1.newLine();
                 }
             }
+
 
             writer1.close();
             reader1.close();
@@ -116,12 +117,6 @@ public class ConfirmationTokenService {
 
     // Main method for testing
     public static void main(String[] args) {
-        ConfirmationTokenRepository confirmationTokenRepository = new ConfirmationTokenRepository();
-        ConfirmationTokenService confirmationTokenService = new ConfirmationTokenService(confirmationTokenRepository);
-
-        boolean isConfirmed = confirmationTokenService.isTokenConfirmed("220f96a6-a280-4bbb-97c8-da8e94844144");
-
-        System.out.println("Token is confirmed: " + isConfirmed);
     }
 
 }

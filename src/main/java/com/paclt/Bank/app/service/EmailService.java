@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService implements EmailSender {
 
-    private final static Logger LOGGER = LoggerFactory
-            .getLogger(EmailService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     private final JavaMailSender mailSender;
 
@@ -28,8 +27,7 @@ public class EmailService implements EmailSender {
     public void send(String to, String email) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper =
-                    new MimeMessageHelper(mimeMessage, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Potvrďte prosím váš email / Please confirm your email");
@@ -40,5 +38,4 @@ public class EmailService implements EmailSender {
             throw new IllegalStateException("failed to send email");
         }
     }
-
 }

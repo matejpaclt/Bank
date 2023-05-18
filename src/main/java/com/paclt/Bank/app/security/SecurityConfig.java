@@ -16,10 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private final EmailSender emailSender;
-    private final ConfirmationTokenService confirmationTokenService;
+    public final EmailSender emailSender;
+    public final ConfirmationTokenService confirmationTokenService;
 
+    public SecurityConfig() {
+        this.emailSender = null;
+        this.confirmationTokenService = null;
+    }
+
+    @Autowired
     public SecurityConfig(EmailSender emailSender, ConfirmationTokenService confirmationTokenService) {
         this.emailSender = emailSender;
         this.confirmationTokenService = confirmationTokenService;
@@ -33,7 +38,6 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-
     }
 
     @Bean
@@ -41,9 +45,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
-
     }
 
     @Bean

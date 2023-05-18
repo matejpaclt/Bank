@@ -18,7 +18,6 @@ public class Account {
     public double getBalance() {
         return Math.round(balance * 1000.0) / 1000.0;
     }
-
     @Override
     public String toString() {
         return "currency = " + name + '\n' + ", balance = " + balance + '\n' + '}';

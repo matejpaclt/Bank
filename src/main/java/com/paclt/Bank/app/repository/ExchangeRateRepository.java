@@ -1,6 +1,7 @@
 package com.paclt.Bank.app.repository;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -50,15 +51,6 @@ public class ExchangeRateRepository {
         return null;
     }
 
-    public static void printArray(String[][] text) {
-        for (int i = 0; i < text.length; i++) {
-            for (int j = 0; j < text[i].length; j++) {
-                System.out.print(text[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-
     public static String[] getExchangeRate(String currency) throws IOException {
         String[][] read = readExchangeFile();
         for (int i = 0; i < read.length; i++) {
@@ -70,11 +62,18 @@ public class ExchangeRateRepository {
     }
 
     public static String[][] readExchangeFile() throws IOException {
-        List<String> edit = Files.readAllLines(Paths.get("src/main/resources/ExchangeRate.txt"));
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(Paths.get("src/main/resources/ExchangeRate.txt"), StandardCharsets.ISO_8859_1);
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            throw e;
+        }
+
         List<String[]> outputList = new ArrayList<>();
 
-        for (int i = 3; i < edit.size(); i++) {
-            String line = edit.get(i).trim();
+        for (int i = 3; i < lines.size(); i++) {
+            String line = lines.get(i).trim();
             if (!line.isEmpty()) {
                 String[] parts = line.split("\\|");
                 if (parts.length == 5) {
@@ -93,11 +92,4 @@ public class ExchangeRateRepository {
         return output;
     }
 
-
-
-
-    public static void main(String[] args) throws IOException {
-        printArray(readExchangeFile());
-
-    }
 }

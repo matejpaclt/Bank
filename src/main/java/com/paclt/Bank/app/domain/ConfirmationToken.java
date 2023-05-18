@@ -15,7 +15,7 @@ public class ConfirmationToken {
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.confirmed = confirmed;
-        this.id=id;
+        this.id = id;
     }
 
     // Getters and setters
@@ -51,15 +51,11 @@ public class ConfirmationToken {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getExpiredAt() {
-        return expiresAt;
-    }
-
-    public void setExpiredAt(LocalDateTime expiredAt) {
-        this.expiresAt = expiredAt;
-    }
 
     public Boolean getConfirmed() {
         return confirmed;
     }
+
+    public void setConfirmed(Boolean confirmed) {this.confirmed = confirmed;}
+
 }

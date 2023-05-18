@@ -79,7 +79,7 @@ public class AppController {
         return "redirect:/dashboard";
     }
 
-    private String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+    String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         String name = authentication.getName();
         long id = UserRepository.getId(name);
         boolean success = false;

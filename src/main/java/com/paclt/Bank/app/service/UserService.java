@@ -35,8 +35,7 @@ public class UserService {
                 if (parts[0].equals(type)) {
                     return true;
                 }
-            }
-            return false;
+            }return false;
         } catch (IOException e) {
             throw new RuntimeException("Error loading accounts from file", e);
         }
@@ -67,8 +66,7 @@ public class UserService {
             } else {
                 throw new IllegalArgumentException("Account of type already exists");
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Error loading accounts from file", e);
+        } catch (IOException e) { throw new RuntimeException("Error loading accounts from file", e);
         }
     }
     public static int deposit(long id, String type, double amount) throws IOException {
@@ -78,7 +76,7 @@ public class UserService {
         String tempFilePath = String.format("data/%d_temp.txt", id);
         Path tempPath = Paths.get(tempFilePath);
 
-        double maxBalance = Long.MAX_VALUE; // Maximum balance value
+        double maxBalance = Double.MAX_VALUE;  // Maximum balance value
 
         // Read the existing account balance
         double existingBalance = 0.0;
@@ -94,16 +92,16 @@ public class UserService {
                     break;
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Error reading account: " + e.getMessage());
-            return 0;
+        } catch (IOException e) {System.err.println("Error reading account: " + e.getMessage());return 0;
         }
 
         // Check if the deposit amount exceeds the maximum balance
-        if (foundType && (existingBalance + amount) > maxBalance) {
-            System.err.println("Deposit amount exceeds the maximum balance.");
-            return 0;
+        if (foundType && (existingBalance + amount) >= maxBalance) {
+            System.err.println("Deposit amount exceeds the maximum balance.");return 0;
         }
+
+        // Update the existing balance with the deposit amount
+        existingBalance += amount;
 
         // Write updated balance to the temporary file
         try (BufferedReader reader = Files.newBufferedReader(inputPath);
@@ -112,23 +110,18 @@ public class UserService {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts[0].equals(type)) {
-                    double newAmount = existingBalance + amount;
-                    line = type + "," + newAmount;
+                    line = type + "," + existingBalance;
                 }
                 writer.write(line + System.lineSeparator());
             }
             writeToLog(id, "+", type, amount);
-        } catch (IOException e) {
-            System.err.println("Error updating account: " + e.getMessage());
-            return 0;
+        } catch (IOException e) {System.err.println("Error updating account: " + e.getMessage());return 0;
         }
 
         // Rename the temporary file to the original file
         try {
             Files.move(tempPath, inputPath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            System.err.println("Error renaming file: " + e.getMessage());
-            return 0;
+        } catch (IOException e) {System.err.println("Error renaming file: " + e.getMessage());return 0;
         }
 
         return 1;
@@ -220,13 +213,11 @@ public class UserService {
         if (inputFile.delete()) {
             if (!tempFile.renameTo(inputFile)) {
                 System.err.println("Error renaming file");
-                tempFile.delete(); // Delete the temporary file if renaming fails
-                return 0;
+                tempFile.delete();return 0;
             }
         } else {
             System.err.println("Error deleting file");
-            tempFile.delete(); // Delete the temporary file if deletion fails
-            return 0;
+            tempFile.delete(); return 0;
         }
 
         return 1;
@@ -241,8 +232,7 @@ public class UserService {
 
         try {
             if (!Files.exists(filePath)) {
-                Files.createDirectories(filePath.getParent());
-                Files.createFile(filePath);
+                Files.createDirectories(filePath.getParent());Files.createFile(filePath);
             }
 
             List<String> lines = new ArrayList<>(Files.readAllLines(filePath, StandardCharsets.UTF_8));
@@ -256,8 +246,7 @@ public class UserService {
             lines.add(formattedDateTime + " " + type + " " + currency + " " + amount);
 
             Files.write(filePath, lines, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {e.printStackTrace();
         }
     }
 
@@ -272,15 +261,10 @@ public class UserService {
             List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
             Collections.reverse(lines);
             return lines;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
+        } catch (IOException e) {e.printStackTrace();return Collections.emptyList();
         }
     }
 
-    public static void main(String[] args) throws IOException {
-
-    }
 
 }
 

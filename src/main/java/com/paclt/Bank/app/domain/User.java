@@ -50,6 +50,9 @@ public class User {
         builder.append(this.id).append(" ").append(this.firstName).append(" ").append(this.lastName).append(" ").append(this.email).append(" ").append(this.password);
         return builder.toString();
     }
+    public List<Account> getAccounts() {
+        return accounts;
+    }
 
     public void loadAccountsFromFile(String filename) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -64,5 +67,9 @@ public class User {
         } catch (NullPointerException e) {
             System.err.println("File not found: " + filename);
         }
+    }
+
+    public void setId(long id) {
+        this.id=id;
     }
 }
