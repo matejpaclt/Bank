@@ -11,7 +11,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    background-color: #087cfc;
+    background-color: #142d4c;
     color: #fff;
 }
 
@@ -74,7 +74,7 @@ form input[type="password"] {
 form input[type="text"]:focus,
 form input[type="password"]:focus {
     outline: none;
-    border-color: #087cfc;
+    border-color: #142d4c;
 }
 
 /* Error */
@@ -89,7 +89,7 @@ form input[type="password"]:focus {
 button[type="submit"] {
     padding: 8px 16px;
     border: none;
-    background-color: #087cfc;
+    background-color: #142d4c;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
@@ -98,7 +98,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #0854c7;
+    background-color: #142d4c;
 }
 
 .leftCol {
@@ -192,7 +192,7 @@ label {
 .submit-button {
     padding: 12px 120px;
     border: none;
-    background-color: #087cfc;
+    background-color: #142d4c;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
@@ -202,7 +202,7 @@ label {
 }
 
 .submit-button:hover {
-    background-color: #0854c7;
+    background-color: #142d4c;
 }
 
 .form-container {
@@ -211,4 +211,3 @@ label {
     align-items: center;
     margin-bottom: 1rem;
 }
-
