@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="cs"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfirmationTokenService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Bank</a> &gt; <a href="index.source.html" class="el_package">com.paclt.Bank.app.service</a> &gt; <span class="el_source">ConfirmationTokenService.java</span></div><h1>ConfirmationTokenService.java</h1><pre class="source lang-java linenums">package com.paclt.Bank.app.service;
+import com.paclt.Bank.app.domain.ConfirmationToken;
+import com.paclt.Bank.app.repository.ConfirmationTokenRepository;
+import org.springframework.stereotype.Service;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class ConfirmationTokenService {
+
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+
+<span class="fc" id="L14">    public ConfirmationTokenService(ConfirmationTokenRepository confirmationTokenRepository) {</span>
+<span class="fc" id="L15">        this.confirmationTokenRepository = confirmationTokenRepository;</span>
+<span class="fc" id="L16">    }</span>
+
+    public static void saveConfirmationToken(ConfirmationToken token) {
+        try {
+<span class="fc" id="L20">            File file = new File(&quot;data/tokens.txt&quot;);</span>
+<span class="fc" id="L21">            FileWriter fileWriter = new FileWriter(file, true);</span>
+<span class="fc" id="L22">            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);</span>
+
+<span class="fc" id="L24">            bufferedWriter.write(token.getToken() + &quot;,&quot; + token.getCreatedAt() + &quot;,&quot;</span>
+<span class="fc" id="L25">                    + token.getExpiresAt() + &quot;,&quot; + token.getConfirmed() + &quot;,&quot;</span>
+<span class="fc" id="L26">                    + token.getId());</span>
+<span class="fc" id="L27">            bufferedWriter.newLine();</span>
+<span class="fc" id="L28">            bufferedWriter.close();</span>
+<span class="nc" id="L29">        } catch (IOException e) {</span>
+<span class="nc" id="L30">            e.printStackTrace();</span>
+<span class="fc" id="L31">        }</span>
+<span class="fc" id="L32">    }</span>
+
+    public Optional&lt;ConfirmationToken&gt; getToken(String token) {
+        try {
+<span class="fc" id="L36">            File file = new File(&quot;data/tokens.txt&quot;);</span>
+<span class="fc" id="L37">            FileReader fileReader = new FileReader(file);</span>
+<span class="fc" id="L38">            BufferedReader bufferedReader = new BufferedReader(fileReader);</span>
+
+            String line;
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            while ((line = bufferedReader.readLine()) != null) {</span>
+<span class="fc" id="L42">                String[] tokenData = line.split(&quot;,&quot;);</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">                if (tokenData[0].equals(token)) {</span>
+<span class="fc" id="L44">                    ConfirmationToken confirmationToken = new ConfirmationToken(tokenData[0], LocalDateTime.parse(tokenData[1]), LocalDateTime.parse(tokenData[2]), Boolean.parseBoolean(tokenData[3]), Long.valueOf(tokenData[4]));</span>
+<span class="fc" id="L45">                    bufferedReader.close();</span>
+<span class="fc" id="L46">                    return Optional.of(confirmationToken);</span>
+                }
+<span class="nc" id="L48">            }</span>
+
+<span class="nc" id="L50">            bufferedReader.close();</span>
+<span class="nc" id="L51">        } catch (IOException e) {</span>
+<span class="nc" id="L52">            e.printStackTrace();</span>
+<span class="nc" id="L53">        }</span>
+
+<span class="nc" id="L55">        return Optional.empty();</span>
+    }
+
+    public int setConfirmedAt(String token) {
+        try {
+<span class="fc" id="L60">            File inputFile = new File(&quot;data/tokens.txt&quot;);</span>
+<span class="fc" id="L61">            File tempFile = new File(&quot;data/tokens_temp.txt&quot;);</span>
+
+<span class="fc" id="L63">            BufferedReader reader1 = new BufferedReader(new FileReader(inputFile));</span>
+<span class="fc" id="L64">            BufferedWriter writer1 = new BufferedWriter(new FileWriter(tempFile));</span>
+            Boolean confirmed;
+            String line;
+<span class="fc" id="L67">            int rowsAffected = 0;</span>
+
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            while ((line = reader1.readLine()) != null) {</span>
+<span class="fc" id="L70">                String[] tokenData = line.split(&quot;,&quot;);</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                if (tokenData[0].equals(token)) {</span>
+<span class="pc bpc" id="L72" title="2 of 4 branches missed.">                    if (LocalDateTime.now().isAfter(LocalDateTime.parse(tokenData[1])) &amp;&amp; LocalDateTime.now().isBefore(LocalDateTime.parse(tokenData[2]))) {</span>
+<span class="fc" id="L73">                        confirmed = true;</span>
+                    } else {
+<span class="nc" id="L75">                        confirmed = false;</span>
+                    }
+<span class="fc" id="L77">                    writer1.write(tokenData[0] + &quot;,&quot; + tokenData[1] + &quot;,&quot;</span>
+                            + tokenData[2] + &quot;,&quot; + confirmed + &quot;,&quot;
+                            + tokenData[4]);
+<span class="fc" id="L80">                    writer1.newLine(); // Add this line to append a newline character</span>
+<span class="fc" id="L81">                    rowsAffected++;</span>
+                } else {
+<span class="nc" id="L83">                    writer1.write(line);</span>
+<span class="nc" id="L84">                    writer1.newLine();</span>
+                }
+<span class="fc" id="L86">            }</span>
+
+
+<span class="fc" id="L89">            writer1.close();</span>
+<span class="fc" id="L90">            reader1.close();</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (inputFile.delete()) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                if (!tempFile.renameTo(inputFile)) {</span>
+<span class="nc" id="L94">                    System.err.println(&quot;Error renaming file&quot;);</span>
+<span class="nc" id="L95">                    return 0;</span>
+                }
+            } else {
+<span class="nc" id="L98">                System.err.println(&quot;Error deleting file&quot;);</span>
+<span class="nc" id="L99">                return 0;</span>
+            }
+
+<span class="fc" id="L102">            return rowsAffected;</span>
+<span class="nc" id="L103">        } catch (IOException e) {</span>
+<span class="nc" id="L104">            e.printStackTrace();</span>
+<span class="nc" id="L105">            return 0;</span>
+        }
+    }
+    public boolean isTokenConfirmed(String token) {
+<span class="fc" id="L109">        Optional&lt;ConfirmationToken&gt; optionalToken = confirmationTokenRepository.getToken(token);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (optionalToken.isPresent()) {</span>
+<span class="fc" id="L111">            ConfirmationToken confirmationToken = optionalToken.get();</span>
+<span class="fc" id="L112">            return confirmationToken.getConfirmed();</span>
+        } else {
+<span class="fc" id="L114">            return false;</span>
+        }
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+<span class="nc" id="L120">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
