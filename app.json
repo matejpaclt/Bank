@@ -1,7 +1,7 @@
 {
   "name": "bank-application",
   "scripts": {
-    "test": "mvn test"
+    "test": "mvn test -P jacoco-agent"
   },
   "env": {
     "JAVA_VERSION": "17"
@@ -12,3 +12,4 @@
     }
   ]
 }
+
