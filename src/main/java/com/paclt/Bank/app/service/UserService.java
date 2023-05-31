@@ -142,7 +142,7 @@ public class UserService {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
             boolean foundType = false;
-            if(type != "CZK") {
+            if (!type.equals("CZK")) {
                 while ((line = reader.readLine()) != null) {
                     if (line.contains("CZK")) {
                         String[] parts = line.split(",");
@@ -153,14 +153,19 @@ public class UserService {
                         balance = Double.parseDouble(parts[1].trim());
                         foundType = true;
                         found = type;
-                        if(balance > amount) {
+                        if (balance >= amount) {
                             newAmount = balance - amount;
-
+                        } else if (balance + (balance * 0.1) >= amount) {
+                            // Calculate negative balance and interest
+                            newAmount = balance - amount;
+                            double negativeBalance = Math.min(-newAmount, balance);
+                            double interest = negativeBalance * 0.1;
+                            newAmount += interest;
                         } else {
                             found = "CZK";
                             amount = calculateExchange(type, amount);
                             newAmount = czkBalance - amount;
-                            if(newAmount < 0){
+                            if (newAmount < 0) {
                                 return 0;
                             }
                         }
@@ -175,7 +180,7 @@ public class UserService {
                         foundType = true;
                         found = "CZK";
                         newAmount = balance - amount;
-                        if(newAmount < 0){
+                        if (newAmount < 0) {
                             return 0;
                         }
                         break;
@@ -213,11 +218,13 @@ public class UserService {
         if (inputFile.delete()) {
             if (!tempFile.renameTo(inputFile)) {
                 System.err.println("Error renaming file");
-                tempFile.delete();return 0;
+                tempFile.delete();
+                return 0;
             }
         } else {
             System.err.println("Error deleting file");
-            tempFile.delete(); return 0;
+            tempFile.delete();
+            return 0;
         }
 
         return 1;

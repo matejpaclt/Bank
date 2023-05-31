@@ -118,41 +118,43 @@ public class AppController {
     }
 
     private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
-            String name = authentication.getName();
-            long id = UserRepository.getId(name);
-            boolean success = false;
-            String message = "";
+        String name = authentication.getName();
+        long id = UserRepository.getId(name);
+        boolean success = false;
+        String message = "";
 
-            try {
-                if (UserService.accountExists(id, accountType) || UserService.accountExists(id, "CZK")) {
-                    int status = UserService.payment(id, accountType, amount.doubleValue());
-                    if (status == 1) {
-                        success = true;
-                        message = "Platba proběhla úspěšně";
-                    } else {
-                        message = "Platba se nezdařila. Zkontrolujte zda požadovaný účet existuje, nebo zda má dostatek finančních prostředků";
-                    }
+        try {
+            boolean accountExists = UserService.accountExists(id, accountType);
+            boolean czechAccountExists = UserService.accountExists(id, "CZK");
+            if (accountExists || czechAccountExists) {
+                int status = UserService.payment(id, accountType, amount.doubleValue());
+                if (status == 1) {
+                    success = true;
+                    message = "Platba proběhla úspěšně";
                 } else {
-                    message = "Omlouváme se, platba neproběhla - Účet " + accountType + " neexistuje";
+                    message = "Platba se nezdařila. Zkontrolujte zda požadovaný účet existuje, nebo zda má dostatek finančních prostředků";
                 }
-            } catch (IOException e) {
-                System.out.println("Error: " + e);
+            } else {
+                message = "Omlouváme se, platba neproběhla - Účet " + accountType + " neexistuje";
             }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
 
-            User user = UserRepository.findUser(id);
-            model.addAttribute("user", user);
-            List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
-            model.addAttribute("listAccounts", listAccounts);
-            List<String> listOfLogs = UserService.readLog(user.getId());
-            model.addAttribute("listOfLogs", listOfLogs);
-            model.addAttribute("show", true);
-            model.addAttribute("success", success);
-            model.addAttribute("message", message);
+        User user = UserRepository.findUser(id);
+        model.addAttribute("user", user);
+        List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
+        model.addAttribute("listAccounts", listAccounts);
+        List<String> listOfLogs = UserService.readLog(user.getId());
+        model.addAttribute("listOfLogs", listOfLogs);
+        model.addAttribute("show", true);
+        model.addAttribute("success", success);
+        model.addAttribute("message", message);
 
-            List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
-            model.addAttribute("listExchangeRates", listExchangeRates);
+        List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
+        model.addAttribute("listExchangeRates", listExchangeRates);
 
-            return "dashboard";
+        return "dashboard";
     }
 
     @PostMapping("/open")
