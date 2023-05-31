@@ -32,7 +32,7 @@ import static com.paclt.Bank.app.repository.ExchangeRateRepository.getExchangeRa
 <span class="fc" id="L32">                Path filePath = Paths.get(FILEPATH + FILENAME);</span>
 
                 // Check if the file exists, create it if it doesn't
-<span class="pc bpc" id="L35" title="1 of 2 branches missed.">                if (!Files.exists(filePath)) {</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                if (!Files.exists(filePath)) {</span>
 <span class="fc" id="L36">                    Files.createFile(filePath);</span>
                 }
 
