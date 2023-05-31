@@ -1,5 +1,5 @@
 {
-  "name": "stark-basin-93530",
+  "name": "bank-application",
   "scripts": {
     "test": "mvn test"
   },
