@@ -155,10 +155,10 @@ public class UserService {
                         found = type;
                         if (balance >= amount) {
                             newAmount = balance - amount;
-                        } else if (balance + (balance * 0.1) >= amount) {
+                        } else if ((balance + (balance * 0.1)) >= amount) {
                             // Calculate negative balance and interest
                             newAmount = balance - amount;
-                            double negativeBalance = Math.min(-newAmount, balance);
+                            double negativeBalance = Math.max(newAmount, -balance);
                             double interest = negativeBalance * 0.1;
                             newAmount += interest;
                         } else {
