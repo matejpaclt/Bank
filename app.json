@@ -1,14 +1,15 @@
 {
   "name": "bank-application",
   "scripts": {
-    "test": "mvn test"
+    "test": "mvn test -P jacoco-agent"
   },
   "env": {
     "JAVA_VERSION": "17"
   },
   "buildpacks": [
     {
-      "url": "heroku/maven"
+      "url": "heroku/java"
     }
   ]
 }
+

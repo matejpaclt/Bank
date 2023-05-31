@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Bank</a> &gt; <a href="index.source.html" class="el_package">com.paclt.Bank.app.domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.paclt.Bank.app.domain;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.FileReader;
+public class User {
+    private long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private List&lt;Account&gt; accounts;
+
+<span class="fc" id="L16">    public User(long id, String firstName, String lastName, String email, String password) {</span>
+<span class="fc" id="L17">        this.id = id;</span>
+<span class="fc" id="L18">        this.firstName = firstName;</span>
+<span class="fc" id="L19">        this.lastName = lastName;</span>
+<span class="fc" id="L20">        this.email = email;</span>
+<span class="fc" id="L21">        this.password = password;</span>
+<span class="fc" id="L22">        accounts = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L23">        loadAccountsFromFile(&quot;data/&quot; + id + &quot;.txt&quot;);</span>
+<span class="fc" id="L24">    }</span>
+
+    // getters and setters
+
+    public long getId() {
+<span class="fc" id="L29">        return id;</span>
+    }
+
+    public String getFirstName() {
+<span class="fc" id="L33">        return firstName;</span>
+    }
+
+    public String getLastName() {
+<span class="fc" id="L37">        return lastName;</span>
+    }
+
+    public String getEmail() {
+<span class="fc" id="L41">        return email;</span>
+    }
+
+    public String getPassword() {
+<span class="fc" id="L45">        return password;</span>
+    }
+
+    public String toString() {
+<span class="fc" id="L49">        StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L50">        builder.append(this.id).append(&quot; &quot;).append(this.firstName).append(&quot; &quot;).append(this.lastName).append(&quot; &quot;).append(this.email).append(&quot; &quot;).append(this.password);</span>
+<span class="fc" id="L51">        return builder.toString();</span>
+    }
+    public List&lt;Account&gt; getAccounts() {
+<span class="fc" id="L54">        return accounts;</span>
+    }
+
+    public void loadAccountsFromFile(String filename) {
+<span class="fc" id="L58">        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {</span>
+            String line;
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
+<span class="fc" id="L61">                String[] parts = line.split(&quot;,&quot;);</span>
+<span class="fc" id="L62">                Account account = new Account(parts[0], Double.parseDouble(parts[1]));</span>
+<span class="fc" id="L63">                accounts.add(account);</span>
+<span class="fc" id="L64">            }</span>
+<span class="nc" id="L65">        } catch (IOException e) {</span>
+<span class="nc" id="L66">            System.err.println(&quot;Error loading accounts from file: &quot; + e.getMessage());</span>
+<span class="nc" id="L67">        } catch (NullPointerException e) {</span>
+<span class="nc" id="L68">            System.err.println(&quot;File not found: &quot; + filename);</span>
+<span class="pc" id="L69">        }</span>
+<span class="fc" id="L70">    }</span>
+
+    public void setId(long id) {
+<span class="fc" id="L73">        this.id=id;</span>
+<span class="fc" id="L74">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

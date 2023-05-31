@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Bank</a> &gt; <a href="index.source.html" class="el_package">com.paclt.Bank.app.controller</a> &gt; <span class="el_source">AppController.java</span></div><h1>AppController.java</h1><pre class="source lang-java linenums">package com.paclt.Bank.app.controller;
+
+import com.paclt.Bank.app.domain.Account;
+import com.paclt.Bank.app.domain.ExchangeRate;
+import com.paclt.Bank.app.domain.User;
+import com.paclt.Bank.app.repository.AccountRepository;
+import com.paclt.Bank.app.repository.ExchangeRateRepository;
+import com.paclt.Bank.app.repository.UserRepository;
+import com.paclt.Bank.app.service.CustomUserDetailsServiceImpl;
+import com.paclt.Bank.app.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+
+@Controller
+public class AppController {
+
+    private final CustomUserDetailsServiceImpl customUserDetailsServiceImpl;
+
+<span class="fc" id="L27">    private Boolean state = true;</span>
+
+<span class="fc" id="L29">    public AppController(CustomUserDetailsServiceImpl customUserDetailsServiceImpl) {</span>
+<span class="fc" id="L30">        this.customUserDetailsServiceImpl = customUserDetailsServiceImpl;</span>
+<span class="fc" id="L31">    }</span>
+
+    @GetMapping(&quot;&quot;)
+    public String viewHomePage() {
+<span class="fc" id="L35">        return &quot;index&quot;;</span>
+    }
+
+    @GetMapping(&quot;/login&quot;)
+    public String showLoginForm() {
+<span class="fc" id="L40">        return &quot;login&quot;;</span>
+    }
+
+    @GetMapping(&quot;/confirm&quot;)
+    public String confirm(Model model, @RequestParam(&quot;token&quot;) String token) {
+<span class="fc" id="L45">        model.addAttribute(&quot;token&quot;, customUserDetailsServiceImpl.confirmToken(token));</span>
+<span class="fc" id="L46">        return &quot;confirm&quot;;</span>
+    }
+
+    @GetMapping(&quot;/dashboard&quot;)
+    public String dashboard(Model model, Authentication authentication) throws IOException {
+<span class="nc" id="L51">        String email = authentication.getName();</span>
+<span class="nc" id="L52">        long id = UserRepository.getId(email);</span>
+<span class="nc" id="L53">        User user = UserRepository.findUser(id);</span>
+<span class="nc" id="L54">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L55">        List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
+<span class="nc" id="L56">        model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
+<span class="nc" id="L57">        List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
+<span class="nc" id="L58">        model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
+<span class="nc" id="L59">        model.addAttribute(&quot;show&quot;, false);</span>
+
+<span class="nc" id="L61">        List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();</span>
+<span class="nc" id="L62">        model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
+
+<span class="nc" id="L64">        return &quot;dashboard&quot;;</span>
+    }
+
+    @PostMapping(&quot;/transaction&quot;)
+    public String handleTransaction(@RequestParam(&quot;action&quot;) String action,
+                                    @RequestParam(&quot;amount&quot;) BigDecimal amount,
+                                    @RequestParam(&quot;account-type&quot;) String accountType,
+                                    Model model, Authentication authentication) throws IOException {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (action.equals(&quot;deposit&quot;)) {</span>
+<span class="nc" id="L73">            return handleDeposit(amount, model, accountType, authentication);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        } else if (action.equals(&quot;withdraw&quot;)) {</span>
+<span class="nc" id="L75">            return handlePayment(amount, model, accountType, authentication);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        } else if (action.equals(&quot;open&quot;)) {</span>
+<span class="nc" id="L77">            return handleOpen(amount, model, accountType, authentication);</span>
+        }
+<span class="nc" id="L79">        return &quot;redirect:/dashboard&quot;;</span>
+    }
+
+    String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+<span class="nc" id="L83">        String name = authentication.getName();</span>
+<span class="nc" id="L84">        long id = UserRepository.getId(name);</span>
+<span class="nc" id="L85">        boolean success = false;</span>
+<span class="nc" id="L86">        String message = &quot;Vklad proběhl úspěšně&quot;;</span>
+
+        try {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (UserService.accountExists(id, accountType)) {</span>
+<span class="nc" id="L90">                int status = UserService.deposit(id, accountType, amount.doubleValue());</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                if (status == 1) {</span>
+<span class="nc" id="L92">                    success = true;</span>
+<span class="nc" id="L93">                    message = &quot;Vklad proběhl úspěšně&quot;;</span>
+                } else {
+<span class="nc" id="L95">                    success = false;</span>
+<span class="nc" id="L96">                    message = &quot;Vklad se nezdařil. Po vkladu by Váš účet přesahoval horní limity množství uložených peněz.&quot;;</span>
+                }
+            }
+<span class="nc" id="L99">            } catch (IOException e) {</span>
+<span class="nc" id="L100">                System.out.println(&quot;Error: &quot; + e);</span>
+<span class="nc" id="L101">            }</span>
+
+<span class="nc" id="L103">            User user = UserRepository.findUser(id);</span>
+<span class="nc" id="L104">            model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L105">            List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
+<span class="nc" id="L106">            model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
+<span class="nc" id="L107">            List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
+<span class="nc" id="L108">            model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
+<span class="nc" id="L109">            model.addAttribute(&quot;show&quot;, true);</span>
+<span class="nc" id="L110">            model.addAttribute(&quot;success&quot;, success);</span>
+<span class="nc" id="L111">            model.addAttribute(&quot;message&quot;, message);</span>
+
+<span class="nc" id="L113">            List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();</span>
+<span class="nc" id="L114">            model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
+
+<span class="nc" id="L116">            return &quot;dashboard&quot;;</span>
+
+    }
+
+    private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+<span class="nc" id="L121">            String name = authentication.getName();</span>
+<span class="nc" id="L122">            long id = UserRepository.getId(name);</span>
+<span class="nc" id="L123">            boolean success = false;</span>
+<span class="nc" id="L124">            String message = &quot;&quot;;</span>
+
+            try {
+<span class="nc bnc" id="L127" title="All 4 branches missed.">                if (UserService.accountExists(id, accountType) || UserService.accountExists(id, &quot;CZK&quot;)) {</span>
+<span class="nc" id="L128">                    int status = UserService.payment(id, accountType, amount.doubleValue());</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                    if (status == 1) {</span>
+<span class="nc" id="L130">                        success = true;</span>
+<span class="nc" id="L131">                        message = &quot;Platba proběhla úspěšně&quot;;</span>
+                    } else {
+<span class="nc" id="L133">                        message = &quot;Platba se nezdařila. Zkontrolujte zda požadovaný účet existuje, nebo zda má dostatek finančních prostředků&quot;;</span>
+                    }
+<span class="nc" id="L135">                } else {</span>
+<span class="nc" id="L136">                    message = &quot;Omlouváme se, platba neproběhla - Účet &quot; + accountType + &quot; neexistuje&quot;;</span>
+                }
+<span class="nc" id="L138">            } catch (IOException e) {</span>
+<span class="nc" id="L139">                System.out.println(&quot;Error: &quot; + e);</span>
+<span class="nc" id="L140">            }</span>
+
+<span class="nc" id="L142">            User user = UserRepository.findUser(id);</span>
+<span class="nc" id="L143">            model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L144">            List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
+<span class="nc" id="L145">            model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
+<span class="nc" id="L146">            List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
+<span class="nc" id="L147">            model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
+<span class="nc" id="L148">            model.addAttribute(&quot;show&quot;, true);</span>
+<span class="nc" id="L149">            model.addAttribute(&quot;success&quot;, success);</span>
+<span class="nc" id="L150">            model.addAttribute(&quot;message&quot;, message);</span>
+
+<span class="nc" id="L152">            List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();</span>
+<span class="nc" id="L153">            model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
+
+<span class="nc" id="L155">            return &quot;dashboard&quot;;</span>
+    }
+
+    @PostMapping(&quot;/open&quot;)
+    public String handleOpen(@RequestParam(&quot;amount&quot;) BigDecimal amount, Model model,
+                             @RequestParam(&quot;account-type&quot;) String accountType,
+                             Authentication authentication) throws IOException {
+<span class="nc" id="L162">        String message = &quot;Účet byl úspěšně otevřen&quot;;</span>
+<span class="nc" id="L163">        String name = authentication.getName();</span>
+<span class="nc" id="L164">        long id = UserRepository.getId(name);</span>
+
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (!UserService.accountExists(id, accountType)) {</span>
+<span class="nc" id="L167">            UserService.addAccount(id, accountType, amount);</span>
+<span class="nc" id="L168">            state = true;</span>
+        } else {
+<span class="nc" id="L170">            state = false;</span>
+<span class="nc" id="L171">            message = &quot;Omlouváme se, účet nebyl otevřen. Již máte otevřený účet v měně &quot; + accountType;</span>
+        }
+
+<span class="nc" id="L174">        User user = UserRepository.findUser(id);</span>
+<span class="nc" id="L175">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L176">        List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
+<span class="nc" id="L177">        model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
+<span class="nc" id="L178">        List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
+<span class="nc" id="L179">        model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
+<span class="nc" id="L180">        model.addAttribute(&quot;show&quot;, true);</span>
+<span class="nc" id="L181">        model.addAttribute(&quot;success&quot;, state);</span>
+<span class="nc" id="L182">        model.addAttribute(&quot;message&quot;, message);</span>
+
+<span class="nc" id="L184">        List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();</span>
+<span class="nc" id="L185">        model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
+
+<span class="nc" id="L187">        return &quot;dashboard&quot;;</span>
+    }
+    }
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
