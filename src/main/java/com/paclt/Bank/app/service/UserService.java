@@ -180,7 +180,7 @@ public class UserService {
                         foundType = true;
                         found = "CZK";
                         newAmount = balance - amount;
-                        if (newAmount < 0) {
+                        if (newAmount < (-balance * 0.1)) {
                             return 0;
                         }
                         break;
