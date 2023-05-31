@@ -79,6 +79,7 @@
 						<exclude>**/entities/*.class</exclude>
 						<exclude>**/exceptions/*.class</exclude>
 						<exclude>**/podam/*.class</exclude>
+						<exclude>**/com/paclt/Bank/app/controller/AppController.*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
