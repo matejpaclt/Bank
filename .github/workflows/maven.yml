@@ -26,7 +26,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          BRANCH: gh-pages
+          BRANCH: main
           FOLDER: ./target  # or the appropriate folder where the deployable artifact is generated
       
       - name: Deploy to Heroku
