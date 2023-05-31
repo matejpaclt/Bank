@@ -118,73 +118,75 @@ public class AppController {
     }
 
     private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
-<span class="nc" id="L121">            String name = authentication.getName();</span>
-<span class="nc" id="L122">            long id = UserRepository.getId(name);</span>
-<span class="nc" id="L123">            boolean success = false;</span>
-<span class="nc" id="L124">            String message = &quot;&quot;;</span>
+<span class="nc" id="L121">        String name = authentication.getName();</span>
+<span class="nc" id="L122">        long id = UserRepository.getId(name);</span>
+<span class="nc" id="L123">        boolean success = false;</span>
+<span class="nc" id="L124">        String message = &quot;&quot;;</span>
 
-            try {
-<span class="nc bnc" id="L127" title="All 4 branches missed.">                if (UserService.accountExists(id, accountType) || UserService.accountExists(id, &quot;CZK&quot;)) {</span>
-<span class="nc" id="L128">                    int status = UserService.payment(id, accountType, amount.doubleValue());</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">                    if (status == 1) {</span>
-<span class="nc" id="L130">                        success = true;</span>
-<span class="nc" id="L131">                        message = &quot;Platba proběhla úspěšně&quot;;</span>
-                    } else {
-<span class="nc" id="L133">                        message = &quot;Platba se nezdařila. Zkontrolujte zda požadovaný účet existuje, nebo zda má dostatek finančních prostředků&quot;;</span>
-                    }
-<span class="nc" id="L135">                } else {</span>
-<span class="nc" id="L136">                    message = &quot;Omlouváme se, platba neproběhla - Účet &quot; + accountType + &quot; neexistuje&quot;;</span>
-                }
-<span class="nc" id="L138">            } catch (IOException e) {</span>
-<span class="nc" id="L139">                System.out.println(&quot;Error: &quot; + e);</span>
-<span class="nc" id="L140">            }</span>
+        try {
+<span class="nc bnc" id="L127" title="All 4 branches missed.">            boolean accountExists = UserService.accountExists(id, accountType);</span>
+<span class="nc" id="L128">            boolean czechAccountExists = UserService.accountExists(id, &quot;CZK&quot;);</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            if (accountExists || czechAccountExists) {</span>
+<span class="nc" id="L130">                int status = UserService.payment(id, accountType, amount.doubleValue());</span>
+<span class="nc" id="L131">                if (status == 1) {</span>
+                    success = true;
+<span class="nc" id="L133">                    message = &quot;Platba proběhla úspěšně&quot;;</span>
+                } else {
+<span class="nc" id="L135">                    message = &quot;Platba se nezdařila. Zkontrolujte zda požadovaný účet existuje, nebo zda má dostatek finančních prostředků&quot;;</span>
+<span class="nc" id="L136">                }</span>
+            } else {
+<span class="nc" id="L138">                message = &quot;Omlouváme se, platba neproběhla - Účet &quot; + accountType + &quot; neexistuje&quot;;</span>
+<span class="nc" id="L139">            }</span>
+<span class="nc" id="L140">        } catch (IOException e) {</span>
+            System.out.println(&quot;Error: &quot; + e);
+<span class="nc" id="L142">        }</span>
+<span class="nc" id="L143"></span>
+<span class="nc" id="L144">        User user = UserRepository.findUser(id);</span>
+<span class="nc" id="L145">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L146">        List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
+<span class="nc" id="L147">        model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
+<span class="nc" id="L148">        List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
+<span class="nc" id="L149">        model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
+<span class="nc" id="L150">        model.addAttribute(&quot;show&quot;, true);</span>
+        model.addAttribute(&quot;success&quot;, success);
+<span class="nc" id="L152">        model.addAttribute(&quot;message&quot;, message);</span>
+<span class="nc" id="L153"></span>
+        List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();
+<span class="nc" id="L155">        model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
 
-<span class="nc" id="L142">            User user = UserRepository.findUser(id);</span>
-<span class="nc" id="L143">            model.addAttribute(&quot;user&quot;, user);</span>
-<span class="nc" id="L144">            List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
-<span class="nc" id="L145">            model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
-<span class="nc" id="L146">            List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
-<span class="nc" id="L147">            model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
-<span class="nc" id="L148">            model.addAttribute(&quot;show&quot;, true);</span>
-<span class="nc" id="L149">            model.addAttribute(&quot;success&quot;, success);</span>
-<span class="nc" id="L150">            model.addAttribute(&quot;message&quot;, message);</span>
-
-<span class="nc" id="L152">            List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();</span>
-<span class="nc" id="L153">            model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
-
-<span class="nc" id="L155">            return &quot;dashboard&quot;;</span>
+        return &quot;dashboard&quot;;
     }
 
     @PostMapping(&quot;/open&quot;)
     public String handleOpen(@RequestParam(&quot;amount&quot;) BigDecimal amount, Model model,
-                             @RequestParam(&quot;account-type&quot;) String accountType,
-                             Authentication authentication) throws IOException {
-<span class="nc" id="L162">        String message = &quot;Účet byl úspěšně otevřen&quot;;</span>
-<span class="nc" id="L163">        String name = authentication.getName();</span>
-<span class="nc" id="L164">        long id = UserRepository.getId(name);</span>
+<span class="nc" id="L162">                             @RequestParam(&quot;account-type&quot;) String accountType,</span>
+<span class="nc" id="L163">                             Authentication authentication) throws IOException {</span>
+<span class="nc" id="L164">        String message = &quot;Účet byl úspěšně otevřen&quot;;</span>
+        String name = authentication.getName();
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        long id = UserRepository.getId(name);</span>
+<span class="nc" id="L167"></span>
+<span class="nc" id="L168">        if (!UserService.accountExists(id, accountType)) {</span>
+            UserService.addAccount(id, accountType, amount);
+<span class="nc" id="L170">            state = true;</span>
+<span class="nc" id="L171">        } else {</span>
+            state = false;
+            message = &quot;Omlouváme se, účet nebyl otevřen. Již máte otevřený účet v měně &quot; + accountType;
+<span class="nc" id="L174">        }</span>
+<span class="nc" id="L175"></span>
+<span class="nc" id="L176">        User user = UserRepository.findUser(id);</span>
+<span class="nc" id="L177">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L178">        List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
+<span class="nc" id="L179">        model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
+<span class="nc" id="L180">        List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
+<span class="nc" id="L181">        model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
+<span class="nc" id="L182">        model.addAttribute(&quot;show&quot;, true);</span>
+        model.addAttribute(&quot;success&quot;, state);
+<span class="nc" id="L184">        model.addAttribute(&quot;message&quot;, message);</span>
+<span class="nc" id="L185"></span>
+        List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();
+<span class="nc" id="L187">        model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
 
-<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (!UserService.accountExists(id, accountType)) {</span>
-<span class="nc" id="L167">            UserService.addAccount(id, accountType, amount);</span>
-<span class="nc" id="L168">            state = true;</span>
-        } else {
-<span class="nc" id="L170">            state = false;</span>
-<span class="nc" id="L171">            message = &quot;Omlouváme se, účet nebyl otevřen. Již máte otevřený účet v měně &quot; + accountType;</span>
-        }
-
-<span class="nc" id="L174">        User user = UserRepository.findUser(id);</span>
-<span class="nc" id="L175">        model.addAttribute(&quot;user&quot;, user);</span>
-<span class="nc" id="L176">        List&lt;Account&gt; listAccounts = AccountRepository.findAccountsByUserId(user.getId());</span>
-<span class="nc" id="L177">        model.addAttribute(&quot;listAccounts&quot;, listAccounts);</span>
-<span class="nc" id="L178">        List&lt;String&gt; listOfLogs = UserService.readLog(user.getId());</span>
-<span class="nc" id="L179">        model.addAttribute(&quot;listOfLogs&quot;, listOfLogs);</span>
-<span class="nc" id="L180">        model.addAttribute(&quot;show&quot;, true);</span>
-<span class="nc" id="L181">        model.addAttribute(&quot;success&quot;, state);</span>
-<span class="nc" id="L182">        model.addAttribute(&quot;message&quot;, message);</span>
-
-<span class="nc" id="L184">        List&lt;ExchangeRate&gt; listExchangeRates = ExchangeRateRepository.getExchangeRates();</span>
-<span class="nc" id="L185">        model.addAttribute(&quot;listExchangeRates&quot;, listExchangeRates);</span>
-
-<span class="nc" id="L187">        return &quot;dashboard&quot;;</span>
+        return &quot;dashboard&quot;;
     }
     }
 
