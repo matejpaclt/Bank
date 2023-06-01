@@ -3,11 +3,11 @@ package com.paclt.Bank.app.controller;
 import com.paclt.Bank.app.domain.Account;
 import com.paclt.Bank.app.domain.ExchangeRate;
 import com.paclt.Bank.app.domain.User;
-import import com.paclt.Bank.app.repository.AccountRepository;
-import import com.paclt.Bank.app.repository.ExchangeRateRepository;
-import import com.paclt.Bank.app.repository.UserRepository;
-import import com.paclt.Bank.app.service.CustomUserDetailsServiceImpl;
-import import com.paclt.Bank.app.service.UserService;
+import com.paclt.Bank.app.repository.AccountRepository;
+import com.paclt.Bank.app.repository.ExchangeRateRepository;
+import com.paclt.Bank.app.repository.UserRepository;
+import com.paclt.Bank.app.service.CustomUserDetailsServiceImpl;
+import com.paclt.Bank.app.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,6 @@ import java.util.List;
 
 @Controller
 public class AppController {
-
     public static int sum(int a, int b) {
         return a + b;
     }
@@ -60,6 +59,15 @@ public class AppController {
         return (double) sum / numbers.length;
     }
 
+
+    private final CustomUserDetailsServiceImpl customUserDetailsServiceImpl;
+
+    private Boolean state = true;
+
+    public AppController(CustomUserDetailsServiceImpl customUserDetailsServiceImpl) {
+        this.customUserDetailsServiceImpl = customUserDetailsServiceImpl;
+    }
+
     @GetMapping("")
     public String viewHomePage() {
         return "index";
@@ -72,7 +80,7 @@ public class AppController {
 
     @GetMapping("/confirm")
     public String confirm(Model model, @RequestParam("token") String token) {
-        model.addAttribute("token", customUserDetailsService.confirmToken(token));
+        model.addAttribute("token", customUserDetailsServiceImpl.confirmToken(token));
         return "confirm";
     }
 
@@ -109,8 +117,7 @@ public class AppController {
         return "redirect:/dashboard";
     }
 
-    private String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
-        boolean state = false;
+    String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         String name = authentication.getName();
         long id = UserRepository.getId(name);
         boolean success = false;
@@ -127,28 +134,28 @@ public class AppController {
                     message = "Vklad se nezdařil. Po vkladu by Váš účet přesahoval horní limity množství uložených peněz.";
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error: " + e);
-        }
+            } catch (IOException e) {
+                System.out.println("Error: " + e);
+            }
 
-        User user = UserRepository.findUser(id);
-        model.addAttribute("user", user);
-        List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
-        model.addAttribute("listAccounts", listAccounts);
-        List<String> listOfLogs = UserService.readLog(user.getId());
-        model.addAttribute("listOfLogs", listOfLogs);
-        model.addAttribute("show", true);
-        model.addAttribute("success", success);
-        model.addAttribute("message", message);
+            User user = UserRepository.findUser(id);
+            model.addAttribute("user", user);
+            List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
+            model.addAttribute("listAccounts", listAccounts);
+            List<String> listOfLogs = UserService.readLog(user.getId());
+            model.addAttribute("listOfLogs", listOfLogs);
+            model.addAttribute("show", true);
+            model.addAttribute("success", success);
+            model.addAttribute("message", message);
 
-        List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
-        model.addAttribute("listExchangeRates", listExchangeRates);
+            List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
+            model.addAttribute("listExchangeRates", listExchangeRates);
 
-        return "dashboard";
+            return "dashboard";
+
     }
 
-    private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
-        boolean state = false;
+    String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         String name = authentication.getName();
         long id = UserRepository.getId(name);
         boolean success = false;
@@ -188,8 +195,10 @@ public class AppController {
         return "dashboard";
     }
 
-    private String handleOpen(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
-        boolean state = false;
+    @PostMapping("/open")
+    public String handleOpen(@RequestParam("amount") BigDecimal amount, Model model,
+                             @RequestParam("account-type") String accountType,
+                             Authentication authentication) throws IOException {
         String message = "Účet byl úspěšně otevřen";
         String name = authentication.getName();
         long id = UserRepository.getId(name);
@@ -216,6 +225,12 @@ public class AppController {
         model.addAttribute("listExchangeRates", listExchangeRates);
 
         return "dashboard";
+    }
+
+    public String handleTransactionWithdraw(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+        // Perform necessary operations for "withdraw" action
+        // Call handlePayment method indirectly
+        return handlePayment(amount, model, accountType, authentication);
     }
 }
 
