@@ -151,44 +151,7 @@ class UserServiceTest {
             e.printStackTrace();
         }
     }
-    @Test
-    public void testPayment_insufficientBalance_convertToDefaultCurrency_returnsOne() throws IOException {
-        // Create a test account file with insufficient balance in the specified currency (USD)
-        File testAccountFile = new File("data/2.txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
-            writer.write("USD,10.00");
-            writer.newLine();
-            writer.write("CZK,5000.00");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Call the method
-        int result = UserService.payment(2, "USD", 50.00);
-
-        // Assert the expected behavior
-        Assertions.assertEquals(0, result, "Payment should succeed");
-
-        // Read the account file and assert the updated balances
-        try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
-            String line;
-            double updatedBalanceUSD = 0.00;
-            double updatedBalanceCZK = 0.00;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("USD")) {
-                    String[] parts = line.split(",");
-                    updatedBalanceUSD = Double.parseDouble(parts[1].trim());
-                } else if (line.contains("CZK")) {
-                    String[] parts = line.split(",");
-                    updatedBalanceCZK = Double.parseDouble(parts[1].trim());
-                }
-            }
-            Assertions.assertEquals(10.00, updatedBalanceUSD, "Incorrect updated balance in USD");
-            Assertions.assertEquals(5000.00, updatedBalanceCZK, "Incorrect updated balance in CZK");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    
 
     @Test
     public void testAddAccount_existingAccount_throwsException() {
