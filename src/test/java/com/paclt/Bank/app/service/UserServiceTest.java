@@ -290,7 +290,7 @@ class UserServiceTest {
         // Assert the expected behavior
         Assertions.assertEquals(1, result, "Deposit should fail");
     }
-/*
+
     @Test
     public void testPayment_sufficientBalance_updatesBalanceSuccessfully() throws IOException {
         File testAccountFile = new File("data/2.txt");
@@ -354,7 +354,7 @@ class UserServiceTest {
 
         // Assert the expected behavior
         Assertions.assertEquals(0, result, "Payment should fail");
-    }*/
+    }
 
     @Test
     public void testReadLog_existingLogFile_returnsLogEntriesInReverseOrder() throws IOException {
