@@ -73,7 +73,44 @@ public class AppControllerTest {
         String result = appController.confirm(model, token);
         assertEquals("confirm", result);
     }
+@Test
+    public void testSum() {
+        // Test case 1: Positive numbers
+        int result = AppController.sum(5, 10);
+        Assert.assertEquals(15, result);
 
+        // Test case 2: Negative numbers
+        result = AppController.sum(-8, -3);
+        Assert.assertEquals(-11, result);
+
+        // Test case 3: Zero and positive number
+        result = AppController.sum(0, 7);
+        Assert.assertEquals(7, result);
+
+        // Test case 4: Zero and negative number
+        result = AppController.sum(0, -5);
+        Assert.assertEquals(-5, result);
+    }
+    @Test
+    public void testBubbleSort() {
+        // Test case 1: Sorting an unsorted array
+        int[] array = {9, 4, 2, 7, 5};
+        AppController.bubbleSort(array);
+        int[] expectedArray = {2, 4, 5, 7, 9};
+        Assert.assertArrayEquals(expectedArray, array);
+
+        // Test case 2: Sorting an already sorted array
+        array = new int[]{1, 2, 3, 4, 5};
+        AppController.bubbleSort(array);
+        expectedArray = new int[]{1, 2, 3, 4, 5};
+        Assert.assertArrayEquals(expectedArray, array);
+
+        // Test case 3: Sorting a large array
+        array = new int[]{5, 8, 1, 0, 3, 6, 2, 9, 7, 4};
+        AppController.bubbleSort(array);
+        expectedArray = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        Assert.assertArrayEquals(expectedArray, array);
+    }
     // Add more test methods for other controller methods
 
 }
