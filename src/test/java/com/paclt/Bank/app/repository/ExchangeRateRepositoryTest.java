@@ -61,14 +61,14 @@ public class ExchangeRateRepositoryTest {
         return exchangeRates;
     }
 
-    private String[][] readExchangeFile() throws IOException {
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(Paths.get("src/main/resources/exchangeRate.txt"), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
-            throw e;
-        }
+private String[][] readExchangeFile() throws IOException {
+    List<String> lines;
+    try {
+        lines = Files.readAllLines(Paths.get("src/test/resources/exchangeRate.txt"), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+        System.err.println("Error reading the file: " + e.getMessage());
+        throw e;
+    }
 
         List<String[]> outputList = new ArrayList<>();
 
