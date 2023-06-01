@@ -36,62 +36,7 @@ public class ExchangeRateRepositoryTest {
         // Add more assertions as needed for other ExchangeRate objects
     }
 
-    @Test
-    public void testGetExchangeRates2() throws IOException {
-        List<ExchangeRate> exchangeRates = ExchangeRateRepository.getExchangeRates();
-        assertNotNull(exchangeRates);
-        assertFalse(exchangeRates.isEmpty());
-    }
-
-    private List<ExchangeRate> getExchangeRates() throws IOException {
-        List<ExchangeRate> exchangeRates = new ArrayList<>();
-
-        String[][] exchangeRateArray = readExchangeFile();
-
-        for (String[] exchangeRate : exchangeRateArray) {
-            ExchangeRate exRate = new ExchangeRate(
-                    exchangeRate[0],
-                    exchangeRate[1],
-                    exchangeRate[2],
-                    exchangeRate[3],
-                    exchangeRate[4]
-            );
-            exchangeRates.add(exRate);
-        }
-        return exchangeRates;
-    }
-
-private String[][] readExchangeFile() throws IOException {
-    List<String> lines;
-    try {
-        lines = Files.readAllLines(Paths.get("src/test/resources/exchangeRate.txt"), StandardCharsets.UTF_8);
-    } catch (IOException e) {
-        System.err.println("Error reading the file: " + e.getMessage());
-        throw e;
-    }
-
-        List<String[]> outputList = new ArrayList<>();
-
-        for (int i = 3; i < lines.size(); i++) {
-            String line = lines.get(i).trim();
-            if (!line.isEmpty()) {
-                String[] parts = line.split("\\|");
-                if (parts.length == 5) {
-                    outputList.add(parts);
-                } else {
-                    System.err.println("Invalid line format: " + line);
-                }
-            }
-        }
-
-        String[][] output = new String[outputList.size()][];
-        for (int i = 0; i < outputList.size(); i++) {
-            output[i] = outputList.get(i);
-        }
-
-        return output;
-    }
-
+    
     @Test
     public void testGetHtmlContent() {
         String url = "http://example.com";
