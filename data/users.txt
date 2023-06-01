@@ -1,4 +1,4 @@
 1,John,Doe,john.doe@example.com,$2a$10$hFUeuS1gRvkMKYLS3OHBoeO0Jbu1ZwB9T8NDupwttZV4NZsnVBWNW
-2,Jane,Doe,jane.doe@example.com,$2a$10$9VN3fJwercnQ4zzGGrDHZu72.hWlYGJ5Dp.ih6lQVyoAHvw9RIyAu
-3,Joe,Biden,joe.biden@example.com,$2a$10$R0c86yQ6d52sppCtiOQia.3t10UjOWRqJ.V5Y5Ma.OVkKXzDhXweS
-4,Matej,Paclt,matejpaclt1@gmail.com,$2a$10$4SwXnRW/viTZNBp91QVB1.GbzYQ0KQh.y2lZuUBpzIq0jQ.O8si3K
+2,Matej,Paclt,matejpaclt1@gmail.com,$2a$10$4SwXnRW/viTZNBp91QVB1.GbzYQ0KQh.y2lZuUBpzIq0jQ.O8si3K
+3,Jane,Doe,jane.doe@example.com,$2a$10$9VN3fJwercnQ4zzGGrDHZu72.hWlYGJ5Dp.ih6lQVyoAHvw9RIyAu
+4,Joe,Biden,joe.biden@example.com,$2a$10$R0c86yQ6d52sppCtiOQia.3t10UjOWRqJ.V5Y5Ma.OVkKXzDhXweS
