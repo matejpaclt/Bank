@@ -179,7 +179,11 @@ public class UserService {
                         balance = Double.parseDouble(parts[1].trim());
                         foundType = true;
                         found = "CZK";
-                        newAmount = balance - amount;
+                        double negativeThreshold = -balance * 0.1;
+                        if (balance < 0 && newAmount < negativeThreshold) {
+                            double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
+                            newAmount -= interest;
+                        }
                         if (newAmount < (-balance * 0.1)) {
                             return 0;
                         }
