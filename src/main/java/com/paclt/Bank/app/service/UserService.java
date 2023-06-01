@@ -139,39 +139,56 @@ public class UserService {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
             boolean foundType = false;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains(type)) {
-                    String[] parts = line.split(",");
-                    balance = Double.parseDouble(parts[1].trim());
-                    foundType = true;
-                    found = type;
-                    if (balance >= amount) {
-                        newAmount = balance - amount;
-                    } else if ((balance + (balance * 0.1)) >= amount) {
-                        // Calculate negative balance and interest
-                        double negativeBalance = Math.min(balance, 0);
-                        double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
-                        if (amount < negativeThreshold) {
+            if (!type.equals("CZK")) {
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains("CZK")) {
+                        String[] parts = line.split(",");
+                        czkBalance = Double.parseDouble(parts[1].trim());
+                    }
+                    if (line.contains(type)) {
+                        String[] parts = line.split(",");
+                        balance = Double.parseDouble(parts[1].trim());
+                        foundType = true;
+                        found = type;
+                        if (balance >= amount) {
                             newAmount = balance - amount;
+                        } else if ((balance + (balance * 0.1)) >= amount) {
+                            // Calculate negative balance and interest
+                            newAmount = balance - amount;
+                            double negativeBalance = Math.max(newAmount, -balance);
                             double interest = negativeBalance * 0.1;
                             newAmount -= interest;
                         } else {
-                            System.err.println("Insufficient funds for payment");
-                            return 0;
+                            found = "CZK";
+                            amount = calculateExchange(type, amount);
+                            newAmount = czkBalance - amount;
+                            if (newAmount < 0 || czkBalance - amount < 0) {
+                                System.err.println("Insufficient funds for payment");
+                                return 0;
+                            }
                         }
-                    } else {
-                        found = "CZK";
-                        amount = calculateExchange(type, amount);
-                        newAmount = czkBalance - amount;
-                        if (newAmount < 0 || czkBalance - amount < 0) {
-                            System.err.println("Insufficient funds for payment");
-                            return 0;
-                        }
+                        break;
                     }
-                    break;
-                } else if (line.contains("CZK")) {
-                    String[] parts = line.split(",");
-                    czkBalance = Double.parseDouble(parts[1].trim());
+                }
+            } else {
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains(type)) {
+                        String[] parts = line.split(",");
+                        balance = Double.parseDouble(parts[1].trim());
+                        foundType = true;
+                        found = "CZK";
+                        double negativeThreshold = -balance * 0.1;
+                        newAmount = balance - amount;
+                        if (newAmount < negativeThreshold) {
+                            double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
+                            newAmount -= interest;
+                        }
+                        if (newAmount < negativeThreshold) {
+                            // Adjust newAmount to be at the negativeThreshold
+                            newAmount = Math.max(newAmount, negativeThreshold);
+                        }
+                        break;
+                    }
                 }
             }
             reader.close();
@@ -199,11 +216,10 @@ public class UserService {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
-            tempFile.delete();
             return 0;
         }
 
-        // Replace input file with temporary file
+        // Replace the input file with the temporary file
         if (inputFile.delete()) {
             if (!tempFile.renameTo(inputFile)) {
                 System.err.println("Error renaming file");
