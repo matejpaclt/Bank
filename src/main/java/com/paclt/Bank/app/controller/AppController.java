@@ -24,6 +24,7 @@ public class AppController {
     public static int sum(int a, int b) {
         return a + b;
     }
+
     public static void bubbleSort(int[] array) {
         int n = array.length;
         for (int i = 0; i < n - 1; i++) {
@@ -38,12 +39,10 @@ public class AppController {
         }
     }
 
-    private final CustomUserDetailsServiceImpl customUserDetailsServiceImpl;
+    private final CustomUserDetailsServiceImpl customUserDetailsService;
 
-    private Boolean state = true;
-
-    public AppController(CustomUserDetailsServiceImpl customUserDetailsServiceImpl) {
-        this.customUserDetailsServiceImpl = customUserDetailsServiceImpl;
+    public AppController(CustomUserDetailsServiceImpl customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @GetMapping("")
@@ -58,7 +57,7 @@ public class AppController {
 
     @GetMapping("/confirm")
     public String confirm(Model model, @RequestParam("token") String token) {
-        model.addAttribute("token", customUserDetailsServiceImpl.confirmToken(token));
+        model.addAttribute("token", customUserDetailsService.confirmToken(token));
         return "confirm";
     }
 
