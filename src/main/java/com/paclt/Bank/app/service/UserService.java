@@ -152,7 +152,9 @@ public class UserService {
                     double negativeBalance = Math.max(balance, -balance);
                     double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
                     if (amount < negativeThreshold) {
-                        newAmount = balance - amount - (negativeBalance * 0.1);
+                        newAmount = balance - amount;
+                        double interest = negativeBalance * 0.1;
+                        newAmount -= interest;
                     } else {
                         System.err.println("Insufficient funds for payment");
                         return 0;
@@ -216,6 +218,7 @@ public class UserService {
 
     return 1;
 }
+
     private static void writeToLog(long id, String type, String currency, double amount) {
         String fileName = "data/log/" + id + ".txt";
         Path filePath = Paths.get(fileName);
