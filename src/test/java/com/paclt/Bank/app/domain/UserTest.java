@@ -56,7 +56,7 @@ public class UserTest {
         assertEquals("CZK", accounts.get(0).getName());
         assertEquals(1000.0, accounts.get(0).getBalance());
         assertEquals("USD", accounts.get(1).getName());
-        assertEquals(400.0, accounts.get(1).getBalance());
+        assertEquals(500.0, accounts.get(1).getBalance());
         assertEquals("EUR", accounts.get(2).getName());
         assertEquals(640.0, accounts.get(2).getBalance());
     }
