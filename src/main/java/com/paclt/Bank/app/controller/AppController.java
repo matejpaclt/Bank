@@ -21,23 +21,25 @@ import java.util.List;
 
 @Controller
 public class AppController {
-    public static int sum(int a, int b) {
-    return a + b;
-}
 
-public static void bubbleSort(int[] array) {
-    int n = array.length;
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (array[j] > array[j + 1]) {
-                // Swap array[j] and array[j+1]
-                int temp = array[j];
-                array[j] = array[j + 1];
-                array[j + 1] = temp;
+    public static int sum(int a, int b) {
+        return a + b;
+    }
+
+    public static void bubbleSort(int[] array) {
+        int n = array.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (array[j] > array[j + 1]) {
+                    // Swap array[j] and array[j+1]
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
             }
         }
     }
-}
+
     public static void reverseArray(int[] array) {
         int start = 0;
         int end = array.length - 1;
@@ -49,7 +51,7 @@ public static void bubbleSort(int[] array) {
             end--;
         }
     }
-}
+
     public static double calculateAverage(int[] numbers) {
         int sum = 0;
         for (int number : numbers) {
@@ -57,7 +59,7 @@ public static void bubbleSort(int[] array) {
         }
         return (double) sum / numbers.length;
     }
-}
+
     private final CustomUserDetailsServiceImpl customUserDetailsService;
 
     public AppController(CustomUserDetailsServiceImpl customUserDetailsService) {
@@ -113,7 +115,7 @@ public static void bubbleSort(int[] array) {
         return "redirect:/dashboard";
     }
 
-    String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+    private String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         boolean state = false;
         String name = authentication.getName();
         long id = UserRepository.getId(name);
@@ -151,7 +153,7 @@ public static void bubbleSort(int[] array) {
         return "dashboard";
     }
 
-    String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+    private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         boolean state = false;
         String name = authentication.getName();
         long id = UserRepository.getId(name);
@@ -192,10 +194,7 @@ public static void bubbleSort(int[] array) {
         return "dashboard";
     }
 
-    @PostMapping("/open")
-    public String handleOpen(@RequestParam("amount") BigDecimal amount, Model model,
-                             @RequestParam("account-type") String accountType,
-                             Authentication authentication) throws IOException {
+    private String handleOpen(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         boolean state = false;
         String message = "Účet byl úspěšně otevřen";
         String name = authentication.getName();
@@ -224,12 +223,7 @@ public static void bubbleSort(int[] array) {
 
         return "dashboard";
     }
-
-    public String handleTransactionWithdraw(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
-        // Perform necessary operations for "withdraw" action
-        // Call handlePayment method indirectly
-        return handlePayment(amount, model, accountType, authentication);
-    }
 }
+
 
 
