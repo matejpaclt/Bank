@@ -126,7 +126,7 @@ public class UserService {
 
         return 1;
     }
-    public static int payment(long id, String type, double amount) throws IOException {
+public static int payment(long id, String type, double amount) throws IOException {
     // Define input and temporary files
     File inputFile = new File("data/" + id + ".txt");
     File tempFile = new File("data/" + id + "_temp.txt");
@@ -195,14 +195,14 @@ public class UserService {
         }
 
         // Update the account balance in the temporary file
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        try (BufferedReader reader2 = new BufferedReader(new FileReader(inputFile));
              PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains(found)) {
-                    line = line.replace(balance + "", newAmount + "");
+            String line2;
+            while ((line2 = reader2.readLine()) != null) {
+                if (line2.contains(found)) {
+                    line2 = line2.replace(balance + "", newAmount + "");
                 }
-                writer.println(line);
+                writer.println(line2);
             }
         }
 
@@ -216,6 +216,7 @@ public class UserService {
         return 0;
     }
 }
+
 
     private static void writeToLog(long id, String type, String currency, double amount) {
         String fileName = "data/log/" + id + ".txt";
