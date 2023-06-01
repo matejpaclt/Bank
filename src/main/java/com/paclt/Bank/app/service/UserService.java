@@ -184,7 +184,7 @@ public class UserService {
                             double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
                             newAmount -= interest;
                         }
-                        if (newAmount < (-balance * 0.1)) {
+                        if (newAmount < negativeThreshold) {
                             return 0;
                         }
                         break;
