@@ -21,6 +21,9 @@ import java.util.List;
 
 @Controller
 public class AppController {
+
+    // Existing code...
+
     public static int sum(int a, int b) {
         return a + b;
     }
@@ -233,6 +236,7 @@ public class AppController {
         return handlePayment(amount, model, accountType, authentication);
     }
 }
+
 
 
 
