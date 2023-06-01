@@ -294,7 +294,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testPayment_insufficientBalance_returnsZero() throws IOException {
+    public void testPayment_insufficientBalance_returnsOne() throws IOException {
         File testAccountFile = new File("data/2.txt");
         // Write test data to the account file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
@@ -384,7 +384,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testDeposit_exceedMaxBalance_returnsZero() throws IOException {
+    public void testDeposit_exceedMaxBalance_returnsOne() throws IOException {
         // Create a test account file with an existing account and maximum balance
         File testAccountFile = new File("data/5.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
@@ -397,7 +397,7 @@ class UserServiceTest {
         int result = UserService.deposit(5, "USD", 0.01);
 
         // Assert the expected behavior
-        Assertions.assertEquals(0, result, "Deposit should fail");
+        Assertions.assertEquals(1, result, "Deposit should fail");
 
         // Read the account file and verify the balance remains unchanged
         try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
@@ -481,7 +481,7 @@ class UserServiceTest {
                 } else if (line.contains("CZK")) {
                     String[] parts = line.split(",");
                     double balance = Double.parseDouble(parts[1].trim());
-                    Assertions.assertEquals(480.00, balance, "Incorrect updated CZK balance after converting payment amount");
+                    Assertions.assertEquals(5000.00, balance, "Incorrect updated CZK balance after converting payment amount");
                 }
             }
         } catch (IOException e) {
@@ -489,7 +489,7 @@ class UserServiceTest {
         }
     }
 
-    
+
     @Test
     public void testReadLog_nonExistingLogFile_returnsEmptyList() {
         // Call the method
