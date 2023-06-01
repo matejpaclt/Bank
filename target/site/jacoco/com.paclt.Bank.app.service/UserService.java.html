@@ -162,7 +162,7 @@ import static com.paclt.Bank.app.service.ExchangeRateService.calculateExchange;
 <span class="fc" id="L162">                            found = &quot;CZK&quot;;</span>
 <span class="fc" id="L163">                            amount = calculateExchange(type, amount);</span>
 <span class="fc" id="L164">                            newAmount = czkBalance - amount;</span>
-<span class="pc bpc" id="L165" title="3 of 4 branches missed.">                            if (newAmount &lt; 0 || czkBalance - amount &lt; 0) {</span>
+<span class="pc bpc" id="L165" title="1 of 4 branches missed.">                            if (newAmount &lt; 0 || czkBalance - amount &lt; 0) {</span>
 <span class="fc" id="L166">                                System.err.println(&quot;Insufficient funds for payment&quot;);</span>
 <span class="fc" id="L167">                                return 0;</span>
                             }
