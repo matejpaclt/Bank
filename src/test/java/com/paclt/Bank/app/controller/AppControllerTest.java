@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -91,6 +94,43 @@ public class AppControllerTest {
         // Test case 4: Zero and negative number
         result = AppController.sum(0, -5);
         Assert.assertEquals(-5, result);
+    }
+    @Test
+    public void testCalculateAverage() {
+        // Test case 1: Average of positive numbers
+        int[] numbers = {4, 7, 10, 5, 2};
+        double result = AppController.calculateAverage(numbers);
+        Assert.assertEquals(5.6, result, 0.001);
+
+        // Test case 2: Average of negative numbers
+        numbers = new int[]{-3, -9, -5, -2};
+        result = AppController.calculateAverage(numbers);
+        Assert.assertEquals(-4.75, result, 0.001);
+
+        // Test case 3: Average of mixed positive and negative numbers
+        numbers = new int[]{-1, 2, -4, 6, -3};
+        result = AppController.calculateAverage(numbers);
+        Assert.assertEquals(0, result, 0.001);
+    }
+    @Test
+    public void testReverseArray() {
+        // Test case 1: Reverse an array with odd length
+        int[] array = {1, 2, 3, 4, 5};
+        AppController.reverseArray(array);
+        int[] expectedArray = {5, 4, 3, 2, 1};
+        Assert.assertArrayEquals(expectedArray, array);
+
+        // Test case 2: Reverse an array with even length
+        array = new int[]{10, 20, 30, 40};
+        AppController.reverseArray(array);
+        expectedArray = new int[]{40, 30, 20, 10};
+        Assert.assertArrayEquals(expectedArray, array);
+
+        // Test case 3: Reverse an empty array
+        array = new int[]{};
+        AppController.reverseArray(array);
+        expectedArray = new int[]{};
+        Assert.assertArrayEquals(expectedArray, array);
     }
     @Test
     public void testBubbleSort() {
