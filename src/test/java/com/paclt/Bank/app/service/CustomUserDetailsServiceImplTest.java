@@ -1,71 +1,74 @@
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+package com.paclt.Bank.app.service;
+
+import com.paclt.Bank.app.domain.ConfirmationToken;
+import org.junit.jupiter.api.Assertions;
+import com.paclt.Bank.app.domain.EmailSender;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.paclt.Bank.app.domain.ConfirmationToken;
-import com.paclt.Bank.app.domain.EmailSender;
-import com.paclt.Bank.app.domain.User;
-import com.paclt.Bank.app.repository.UserRepository;
-import com.paclt.Bank.app.service.ConfirmationTokenService;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import static org.mockito.Mockito.when;
 
-class CustomUserDetailsServiceImplTest {
+public class CustomUserDetailsServiceImplTest {
 
+    @Mock
     private EmailSender emailSender;
+
+    @Mock
     private ConfirmationTokenService confirmationTokenService;
-    private CustomUserDetailsServiceImpl userDetailsServiceImpl;
+
+    private CustomUserDetailsServiceImpl customUserDetailsService;
 
     @BeforeEach
     void setUp() {
-        emailSender = mock(EmailSender.class);
-        confirmationTokenService = mock(ConfirmationTokenService.class);
-        userDetailsServiceImpl = new CustomUserDetailsServiceImpl(emailSender, confirmationTokenService);
+        MockitoAnnotations.openMocks(this);
+        customUserDetailsService = new CustomUserDetailsServiceImpl(emailSender, confirmationTokenService);
+    }
+
+
+
+    @Test
+    void confirmToken_ValidToken_TokenConfirmed() {
+        // Arrange
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                false,
+                10L);
+        when(confirmationTokenService.getToken(token)).thenReturn(Optional.of(confirmationToken));
+
+        String result = customUserDetailsService.confirmToken(token);
+
+        assertEquals("Confirmed", result);
     }
 
     @Test
-    void loadUserByUsername_ExistingUser_ReturnsCustomUserDetailsService() {
-        // Arrange
-        String email = "test@example.com";
-        User user = new User(1L, "John", "Doe", email, "password");
-        when(UserRepository.findUserEmail(email)).thenReturn(user);
-
-        // Mock the behavior of confirmationTokenService
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-            UUID.randomUUID().toString(),
-            LocalDateTime.now(),
-            LocalDateTime.now().plusMinutes(15),
-            false,
-            user.getId()
-        );
-        when(confirmationTokenService.getToken(any())).thenReturn(Optional.of(confirmationToken));
-
-        // Act
-        userDetailsServiceImpl.loadUserByUsername(email);
-
-        // Assert
-        // Verify that the email was sent
-        verify(emailSender).send(eq(email), anyString());
-
-        // Verify that the confirmationTokenService methods were called
-        verify(confirmationTokenService).saveConfirmationToken(any(ConfirmationToken.class));
-        verify(confirmationTokenService, atLeastOnce()).getToken(any());
+    void confirmToken_TokenNotFound_ThrowsIllegalStateException() {
+        String token = UUID.randomUUID().toString();
+        when(confirmationTokenService.getToken(token)).thenReturn(Optional.empty());
+        assertThrows(IllegalStateException.class, () -> customUserDetailsService.confirmToken(token));
     }
-
     @Test
-    void loadUserByUsername_NonExistingUser_ThrowsUsernameNotFoundException() {
-        // Arrange
-        String email = "nonexisting@example.com";
-        when(UserRepository.findUserEmail(email)).thenReturn(null);
+    public void testLoadUserByUsername_InvalidUsername() {
+        EmailSender emailSender = Mockito.mock(EmailSender.class);
+        ConfirmationTokenService confirmationTokenService = Mockito.mock(ConfirmationTokenService.class);
 
-        // Act & Assert
-        // Verify that UsernameNotFoundException is thrown
-        assertThrows(UsernameNotFoundException.class, () -> userDetailsServiceImpl.loadUserByUsername(email));
+        CustomUserDetailsServiceImpl userDetailsService = new CustomUserDetailsServiceImpl(emailSender, confirmationTokenService);
+
+        // Try to load user with an invalid username
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername("invalid@example.com"));
     }
+
+    // Add more test methods if needed
 }
 
