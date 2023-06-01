@@ -26,8 +26,8 @@ jobs:
 
       - name: Commit and Push Files
         run: |
-          git config --local user.name "matejpaclt"
-          git config --local user.email "matej.paclt@tul.cz"
+          git config --local user.name "dominikjires"
+          git config --local user.email "dominik.jires@tul.cz"
           git add .
           git commit -m "Add test results"
           git push
