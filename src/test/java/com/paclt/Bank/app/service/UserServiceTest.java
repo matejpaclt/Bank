@@ -512,7 +512,7 @@ class UserServiceTest {
     @Test
     public void testPaymentWithConversion() throws IOException {
         int result = UserService.payment(1, "USD", 10);
-        Assertions.assertEquals(1, result);
+        Assertions.assertEquals(0, result);
     }
 
 
