@@ -21,7 +21,10 @@ public class AccountRepositoryTest {
         public void testFindAccountsByUserId() {
             long userId = 4;
             List<Account> expectedAccounts = List.of(
-                    new Account("CZK", 1000.0)
+                    new Account("CZK", 1000.0),
+                    new Account("CAD", 0.0),
+                    new Account("JPY", 0.0)
+                
             );
             List<Account> actualAccounts = AccountRepository.findAccountsByUserId(userId);
             Assertions.assertEquals(expectedAccounts.size(), actualAccounts.size());
