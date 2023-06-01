@@ -95,6 +95,7 @@ public class AppController {
     }
 
     String handleDeposit(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+        boolean state = false;
         String name = authentication.getName();
         long id = UserRepository.getId(name);
         boolean success = false;
@@ -132,6 +133,7 @@ public class AppController {
     }
 
     String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+        boolean state = false;
         String name = authentication.getName();
         long id = UserRepository.getId(name);
         boolean success = false;
@@ -175,6 +177,7 @@ public class AppController {
     public String handleOpen(@RequestParam("amount") BigDecimal amount, Model model,
                              @RequestParam("account-type") String accountType,
                              Authentication authentication) throws IOException {
+        boolean state = false;
         String message = "Účet byl úspěšně otevřen";
         String name = authentication.getName();
         long id = UserRepository.getId(name);
