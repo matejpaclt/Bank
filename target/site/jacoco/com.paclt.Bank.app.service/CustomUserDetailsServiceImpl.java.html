@@ -48,7 +48,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
 
 <span class="nc" id="L50">        String address = user.getEmail();</span>
-<span class="nc" id="L51">        String appUrl = &quot;https://stark-basin-93530.herokuapp.com&quot;; // Replace with your Heroku app URL</span>
+<span class="nc" id="L51">        String appUrl = &quot;https://bank-application.herokuapp.com&quot;; // Replace with your Heroku app URL</span>
 <span class="nc" id="L52">        String content = &quot;Prosím potvrďte přihlášení ná váš účet kliknutím na link níže / Please click the link below to verify your account: \n\n&quot; +</span>
                 &quot;&lt;a href='&quot; + appUrl + &quot;/confirm?token=&quot; + token + &quot;'&gt;&quot; + appUrl + &quot;/confirm?token=&quot; + token + &quot;&lt;/a&gt;&quot;;
 <span class="nc" id="L54">        emailSender.send(address, content);</span>

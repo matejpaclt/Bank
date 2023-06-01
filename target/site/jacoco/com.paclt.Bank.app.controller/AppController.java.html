@@ -117,7 +117,7 @@ public class AppController {
 
     }
 
-    private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+    String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
 <span class="nc" id="L121">        String name = authentication.getName();</span>
 <span class="nc" id="L122">        long id = UserRepository.getId(name);</span>
 <span class="nc" id="L123">        boolean success = false;</span>
@@ -188,6 +188,12 @@ public class AppController {
 
         return &quot;dashboard&quot;;
     }
+
+    public String handleTransactionWithdraw(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+        // Perform necessary operations for &quot;withdraw&quot; action
+        // Call handlePayment method indirectly
+        return handlePayment(amount, model, accountType, authentication);
     }
+}
 
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
