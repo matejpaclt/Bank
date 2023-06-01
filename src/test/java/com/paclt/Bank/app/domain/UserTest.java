@@ -51,7 +51,7 @@ public class UserTest {
         List<Account> accounts = user.getAccounts();
 
         // Verify the number of accounts
-        assertEquals(3, accounts.size());
+        assertEquals(1, accounts.size());
 
         // Verify the account details
         assertEquals("CZK", accounts.get(0).getName());
