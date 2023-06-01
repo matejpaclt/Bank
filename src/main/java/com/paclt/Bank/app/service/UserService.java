@@ -129,7 +129,7 @@ public class UserService {
 
 
 
-    public static int payment(long id, String type, double amount) throws IOException {
+        public static int payment(long id, String type, double amount) throws IOException {
         // Define input and temporary files
         File inputFile = new File("data/" + id + ".txt");
         File tempFile = new File("data/" + id + "_temp.txt");
@@ -165,7 +165,7 @@ public class UserService {
                             found = "CZK";
                             amount = calculateExchange(type, amount);
                             newAmount = czkBalance - amount;
-                            if (newAmount < 0) {
+                            if (newAmount < 0 || czkBalance - amount < 0) {
                                 return 0;
                             }
                         }
