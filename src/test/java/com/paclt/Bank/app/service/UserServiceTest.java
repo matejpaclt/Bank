@@ -243,36 +243,7 @@ class UserServiceTest {
     }
 
 
-    @Test
-    public void testDeposit_validDeposit_updatesBalanceSuccessfully() throws IOException {
-        File testAccountFile = new File("data/2.txt");
-        // Write test data to the account file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
-            writer.write("USD,100.00");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        // Call the method
-        int result = UserService.deposit(2, TEST_ACCOUNT_TYPE, 50.00);
-
-        // Assert the expected behavior
-        Assertions.assertEquals(1, result, "Deposit should be successful");
-
-        // Read the account file and verify the updated balance
-        try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                Assertions.assertEquals(2, parts.length, "Invalid account file format");
-                if (parts[0].equals(TEST_ACCOUNT_TYPE)) {
-                    Assertions.assertEquals("150.0", parts[1], "Account amount should be updated");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void testDeposit_exceedsMaximumBalance_returnsOne() throws IOException {
@@ -380,7 +351,145 @@ class UserServiceTest {
         Assertions.assertEquals("2023-05-16 14:30 - USD 20.00", logEntries.get(2), "Incorrect log entry");
         Assertions.assertEquals("2023-05-17 09:00 + CZK 50.00", logEntries.get(3), "Incorrect log entry");
     }
+    @Test
+    public void testDeposit_validDeposit_updatesBalanceSuccessfully() throws IOException {
+        // Create a test account file with an existing account
+        File testAccountFile = new File("data/4.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
+            writer.write("USD,100.00");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        // Call the method
+        int result = UserService.deposit(4, "USD", 50.00);
+
+        // Assert the expected behavior
+        Assertions.assertEquals(1, result, "Deposit should succeed");
+
+        // Read the account file and verify the updated balance
+        try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("USD")) {
+                    String[] parts = line.split(",");
+                    double updatedBalance = Double.parseDouble(parts[1].trim());
+                    Assertions.assertEquals(150.00, updatedBalance, "Incorrect updated balance after deposit");
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testDeposit_exceedMaxBalance_returnsZero() throws IOException {
+        // Create a test account file with an existing account and maximum balance
+        File testAccountFile = new File("data/5.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
+            writer.write("USD,99999999999999999999999999999.99");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Call the method with an amount that exceeds the maximum balance
+        int result = UserService.deposit(5, "USD", 0.01);
+
+        // Assert the expected behavior
+        Assertions.assertEquals(0, result, "Deposit should fail");
+
+        // Read the account file and verify the balance remains unchanged
+        try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("USD")) {
+                    String[] parts = line.split(",");
+                    double balance = Double.parseDouble(parts[1].trim());
+                    Assertions.assertEquals(99999999999999999999999999999.99, balance, "Balance should remain unchanged");
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testPayment_sufficientBalance_updatesBalancesSuccessfully() throws IOException {
+        // Create a test account file with sufficient balances
+        File testAccountFile = new File("data/5.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
+            writer.write("USD,100.00");
+            writer.newLine();
+            writer.write("CZK,5000.00");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Call the method
+        int result = UserService.payment(5, "USD", 50.00);
+
+        // Assert the expected behavior
+        Assertions.assertEquals(1, result, "Payment should succeed");
+
+        // Read the account file and verify the updated balances
+        try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("USD")) {
+                    String[] parts = line.split(",");
+                    double updatedBalance = Double.parseDouble(parts[1].trim());
+                    Assertions.assertEquals(50.00, updatedBalance, "Incorrect updated USD balance after payment");
+                } else if (line.contains("CZK")) {
+                    String[] parts = line.split(",");
+                    double balance = Double.parseDouble(parts[1].trim());
+                    Assertions.assertEquals(5000.00, balance, "CZK balance should remain unchanged");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testPayment_insufficientBalance_returnsZeroAndConvertsToDefaultCurrency() throws IOException {
+        // Create a test account file with insufficient balances
+        File testAccountFile = new File("data/5.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
+            writer.write("USD,10.00");
+            writer.newLine();
+            writer.write("CZK,500.00");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Call the method with an amount that exceeds the USD balance
+        int result = UserService.payment(5, "USD", 20.00);
+
+        // Assert the expected behavior
+        Assertions.assertEquals(0, result, "Payment should fail");
+
+        // Read the account file and verify the updated balances
+        try (BufferedReader reader = new BufferedReader(new FileReader(testAccountFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("USD")) {
+                    String[] parts = line.split(",");
+                    double balance = Double.parseDouble(parts[1].trim());
+                    Assertions.assertEquals(10.00, balance, "USD balance should remain unchanged");
+                } else if (line.contains("CZK")) {
+                    String[] parts = line.split(",");
+                    double balance = Double.parseDouble(parts[1].trim());
+                    Assertions.assertEquals(480.00, balance, "Incorrect updated CZK balance after converting payment amount");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
     @Test
     public void testReadLog_nonExistingLogFile_returnsEmptyList() {
         // Call the method
@@ -464,4 +573,5 @@ class UserServiceTest {
         Assertions.assertFalse(log.isEmpty());
     }
 }
+
 
