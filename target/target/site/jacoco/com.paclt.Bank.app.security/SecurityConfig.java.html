@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Bank</a> &gt; <a href="index.source.html" class="el_package">com.paclt.Bank.app.security</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.paclt.Bank.app.security;
+
+import com.paclt.Bank.app.domain.EmailSender;
+import com.paclt.Bank.app.service.ConfirmationTokenService;
+import com.paclt.Bank.app.service.CustomUserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    public final EmailSender emailSender;
+    public final ConfirmationTokenService confirmationTokenService;
+
+<span class="fc" id="L22">    public SecurityConfig() {</span>
+<span class="fc" id="L23">        this.emailSender = null;</span>
+<span class="fc" id="L24">        this.confirmationTokenService = null;</span>
+<span class="fc" id="L25">    }</span>
+
+    @Autowired
+<span class="fc" id="L28">    public SecurityConfig(EmailSender emailSender, ConfirmationTokenService confirmationTokenService) {</span>
+<span class="fc" id="L29">        this.emailSender = emailSender;</span>
+<span class="fc" id="L30">        this.confirmationTokenService = confirmationTokenService;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+<span class="fc" id="L35">        return new CustomUserDetailsServiceImpl(emailSender, confirmationTokenService);</span>
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+<span class="fc" id="L40">        return new BCryptPasswordEncoder();</span>
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+<span class="fc" id="L45">        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();</span>
+<span class="fc" id="L46">        authProvider.setUserDetailsService(userDetailsService());</span>
+<span class="fc" id="L47">        authProvider.setPasswordEncoder(passwordEncoder());</span>
+<span class="fc" id="L48">        return authProvider;</span>
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L53">        http</span>
+<span class="fc" id="L54">                .authorizeRequests()</span>
+<span class="fc" id="L55">                .requestMatchers(&quot;/dashboard&quot;)</span>
+<span class="fc" id="L56">                .authenticated()</span>
+<span class="fc" id="L57">                .anyRequest().permitAll()</span>
+<span class="fc" id="L58">                .and()</span>
+<span class="fc" id="L59">                .formLogin()</span>
+<span class="fc" id="L60">                .loginPage(&quot;/login&quot;)</span>
+<span class="fc" id="L61">                .usernameParameter(&quot;email&quot;)</span>
+<span class="fc" id="L62">                .defaultSuccessUrl(&quot;/dashboard&quot;)</span>
+<span class="fc" id="L63">                .permitAll()</span>
+<span class="fc" id="L64">                .and()</span>
+<span class="fc" id="L65">                .logout()</span>
+<span class="fc" id="L66">                .logoutSuccessUrl(&quot;/&quot;)</span>
+<span class="fc" id="L67">                .permitAll()</span>
+<span class="fc" id="L68">                .and()</span>
+<span class="fc" id="L69">                .exceptionHandling()</span>
+<span class="fc" id="L70">                .accessDeniedPage(&quot;/error.html&quot;);</span>
+
+<span class="fc" id="L72">        return http.build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
