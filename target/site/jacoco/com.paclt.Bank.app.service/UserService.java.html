@@ -84,19 +84,19 @@ import static com.paclt.Bank.app.service.ExchangeRateService.calculateExchange;
 
 <span class="fc" id="L85">        try (BufferedReader reader = Files.newBufferedReader(inputPath)) {</span>
             String line;
-<span class="fc bfc" id="L87" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            while ((line = reader.readLine()) != null) {</span>
 <span class="fc" id="L88">                String[] parts = line.split(&quot;,&quot;);</span>
-<span class="fc bfc" id="L89" title="All 2 branches covered.">                if (parts[0].equals(type)) {</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">                if (parts[0].equals(type)) {</span>
 <span class="fc" id="L90">                    existingBalance = Double.parseDouble(parts[1].trim());</span>
 <span class="fc" id="L91">                    foundType = true;</span>
 <span class="fc" id="L92">                    break;</span>
                 }
-<span class="fc" id="L94">            }</span>
+<span class="nc" id="L94">            }</span>
 <span class="nc" id="L95">        } catch (IOException e) {System.err.println(&quot;Error reading account: &quot; + e.getMessage());return 0;</span>
 <span class="fc" id="L96">        }</span>
 
         // Check if the deposit amount exceeds the maximum balance
-<span class="pc bpc" id="L99" title="1 of 4 branches missed.">        if (foundType &amp;&amp; (existingBalance + amount) &gt;= maxBalance) {</span>
+<span class="pc bpc" id="L99" title="2 of 4 branches missed.">        if (foundType &amp;&amp; (existingBalance + amount) &gt;= maxBalance) {</span>
 <span class="nc" id="L100">            System.err.println(&quot;Deposit amount exceeds the maximum balance.&quot;);return 0;</span>
         }
 
@@ -109,7 +109,7 @@ import static com.paclt.Bank.app.service.ExchangeRateService.calculateExchange;
             String line;
 <span class="fc bfc" id="L110" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
 <span class="fc" id="L111">                String[] parts = line.split(&quot;,&quot;);</span>
-<span class="fc bfc" id="L112" title="All 2 branches covered.">                if (parts[0].equals(type)) {</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">                if (parts[0].equals(type)) {</span>
 <span class="fc" id="L113">                    line = type + &quot;,&quot; + existingBalance;</span>
                 }
 <span class="fc" id="L115">                writer.write(line + System.lineSeparator());</span>
@@ -128,153 +128,153 @@ import static com.paclt.Bank.app.service.ExchangeRateService.calculateExchange;
     }
         public static int payment(long id, String type, double amount) throws IOException {
         // Define input and temporary files
-        File inputFile = new File(&quot;data/&quot; + id + &quot;.txt&quot;);
-        File tempFile = new File(&quot;data/&quot; + id + &quot;_temp.txt&quot;);
-        String found = null;
+<span class="fc" id="L131">        File inputFile = new File(&quot;data/&quot; + id + &quot;.txt&quot;);</span>
+<span class="fc" id="L132">        File tempFile = new File(&quot;data/&quot; + id + &quot;_temp.txt&quot;);</span>
+<span class="fc" id="L133">        String found = null;</span>
 <span class="fc" id="L134">        double newAmount = 0;</span>
 <span class="fc" id="L135">        double balance = 0;</span>
 <span class="fc" id="L136">        double czkBalance = 0;</span>
-<span class="fc" id="L137"></span>
-<span class="fc" id="L138">        // Read input file to determine the account balance</span>
+
+        // Read input file to determine the account balance
 <span class="fc" id="L139">        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {</span>
             String line;
-            boolean foundType = false;
-<span class="fc" id="L142">            if (!type.equals(&quot;CZK&quot;)) {</span>
-                while ((line = reader.readLine()) != null) {
-<span class="fc" id="L144">                    if (line.contains(&quot;CZK&quot;)) {</span>
-<span class="fc bfc" id="L145" title="All 2 branches covered.">                        String[] parts = line.split(&quot;,&quot;);</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">                        czkBalance = Double.parseDouble(parts[1].trim());</span>
-<span class="fc bfc" id="L147" title="All 2 branches covered.">                    }</span>
-<span class="fc" id="L148">                    if (line.contains(type)) {</span>
+<span class="fc" id="L141">            boolean foundType = false;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">            if (!type.equals(&quot;CZK&quot;)) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                while ((line = reader.readLine()) != null) {</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">                    if (line.contains(&quot;CZK&quot;)) {</span>
+<span class="fc" id="L145">                        String[] parts = line.split(&quot;,&quot;);</span>
+<span class="fc" id="L146">                        czkBalance = Double.parseDouble(parts[1].trim());</span>
+                    }
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                    if (line.contains(type)) {</span>
 <span class="fc" id="L149">                        String[] parts = line.split(&quot;,&quot;);</span>
-                        balance = Double.parseDouble(parts[1].trim());
-<span class="fc bfc" id="L151" title="All 2 branches covered.">                        foundType = true;</span>
+<span class="fc" id="L150">                        balance = Double.parseDouble(parts[1].trim());</span>
+<span class="fc" id="L151">                        foundType = true;</span>
 <span class="fc" id="L152">                        found = type;</span>
-<span class="fc" id="L153">                        if (balance &gt;= amount) {</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                        if (balance &gt;= amount) {</span>
 <span class="fc" id="L154">                            newAmount = balance - amount;</span>
-<span class="fc" id="L155">                        } else if ((balance + (balance * 0.1)) &gt;= amount) {</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">                            // Calculate negative balance and interest</span>
-<span class="fc" id="L157">                            newAmount = balance - amount;</span>
-                            double negativeBalance = Math.max(newAmount, -balance);
-                            double interest = negativeBalance * 0.1;
-<span class="fc" id="L160">                            newAmount += interest;</span>
-<span class="fc" id="L161">                        } else {</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">                        } else if ((balance + (balance * 0.1)) &gt;= amount) {</span>
+                            // Calculate negative balance and interest
+<span class="nc" id="L157">                            newAmount = balance - amount;</span>
+<span class="nc" id="L158">                            double negativeBalance = Math.max(newAmount, -balance);</span>
+<span class="nc" id="L159">                            double interest = negativeBalance * 0.1;</span>
+<span class="nc" id="L160">                            newAmount += interest;</span>
+<span class="nc" id="L161">                        } else {</span>
 <span class="fc" id="L162">                            found = &quot;CZK&quot;;</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                            amount = calculateExchange(type, amount);</span>
+<span class="fc" id="L163">                            amount = calculateExchange(type, amount);</span>
 <span class="fc" id="L164">                            newAmount = czkBalance - amount;</span>
-                            if (newAmount &lt; 0 || czkBalance - amount &lt; 0) {
-                                System.err.println(&quot;Insufficient funds for payment&quot;);
-                                return 0;
+<span class="pc bpc" id="L165" title="3 of 4 branches missed.">                            if (newAmount &lt; 0 || czkBalance - amount &lt; 0) {</span>
+<span class="fc" id="L166">                                System.err.println(&quot;Insufficient funds for payment&quot;);</span>
+<span class="fc" id="L167">                                return 0;</span>
                             }
                         }
                         break;
-<span class="fc bfc" id="L171" title="All 2 branches covered.">                    }</span>
-<span class="fc bfc" id="L172" title="All 2 branches covered.">                }</span>
-<span class="fc" id="L173">            } else {</span>
-<span class="fc" id="L174">                while ((line = reader.readLine()) != null) {</span>
-<span class="fc" id="L175">                    if (line.contains(type)) {</span>
+                    }
+                }
+            } else {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">                while ((line = reader.readLine()) != null) {</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">                    if (line.contains(type)) {</span>
 <span class="fc" id="L176">                        String[] parts = line.split(&quot;,&quot;);</span>
 <span class="fc" id="L177">                        balance = Double.parseDouble(parts[1].trim());</span>
-<span class="fc bfc" id="L178" title="All 2 branches covered.">                        foundType = true;</span>
+<span class="fc" id="L178">                        foundType = true;</span>
 <span class="fc" id="L179">                        found = &quot;CZK&quot;;</span>
-                        if (balance &gt;= amount) {
-                            newAmount = balance - amount;
-                        } else if ((balance + (balance * 0.1)) &gt;= amount) {
+<span class="fc bfc" id="L180" title="All 2 branches covered.">                        if (balance &gt;= amount) {</span>
+<span class="fc" id="L181">                            newAmount = balance - amount;</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">                        } else if ((balance + (balance * 0.1)) &gt;= amount) {</span>
                             // Calculate negative balance and interest
-                            newAmount = balance - amount;
-<span class="fc" id="L185">                            double negativeBalance = Math.max(newAmount, -balance);</span>
-<span class="fc bfc" id="L186" title="All 2 branches covered.">                            double interest = negativeBalance * 0.1;</span>
-<span class="fc" id="L187">                            newAmount += interest;</span>
-                        } else {
-                            System.err.println(&quot;Insufficient funds for payment&quot;);
+<span class="nc" id="L184">                            newAmount = balance - amount;</span>
+<span class="nc" id="L185">                            double negativeBalance = Math.max(newAmount, -balance);</span>
+<span class="nc" id="L186">                            double interest = negativeBalance * 0.1;</span>
+<span class="nc" id="L187">                            newAmount += interest;</span>
+<span class="nc" id="L188">                        } else {</span>
+<span class="fc" id="L189">                            System.err.println(&quot;Insufficient funds for payment&quot;);</span>
 <span class="fc" id="L190">                            return 0;</span>
-<span class="pc" id="L191">                        }</span>
-<span class="nc" id="L192">                        break;</span>
-<span class="nc" id="L193">                    }</span>
-<span class="fc" id="L194">                }</span>
+                        }
+                        break;
+                    }
+                }
             }
-            reader.close();
-<span class="fc" id="L197">            if (!foundType) {</span>
+<span class="fc" id="L196">            reader.close();</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">            if (!foundType) {</span>
 <span class="fc" id="L198">                System.err.println(&quot;Account type not found&quot;);</span>
-                return 0;
-<span class="fc bfc" id="L200" title="All 2 branches covered.">            }</span>
-<span class="fc bfc" id="L201" title="All 2 branches covered."></span>
+<span class="fc" id="L199">                return 0;</span>
+            }
+
 <span class="fc" id="L202">            writeToLog(id, &quot;-&quot;, found, amount);</span>
-        } catch (IOException e) {
-<span class="fc" id="L204">            e.printStackTrace();</span>
-            return 0;
+<span class="pc" id="L203">        } catch (IOException e) {</span>
+<span class="nc" id="L204">            e.printStackTrace();</span>
+<span class="nc" id="L205">            return 0;</span>
 <span class="fc" id="L206">        }</span>
-<span class="nc" id="L207"></span>
-<span class="nc" id="L208">        // Read input file and write to temporary file</span>
-<span class="nc" id="L209">        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));</span>
+
+        // Read input file and write to temporary file
+<span class="fc" id="L209">        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));</span>
 <span class="fc" id="L210">             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {</span>
             String line;
-            while ((line = reader.readLine()) != null) {
-<span class="pc bpc" id="L213" title="1 of 2 branches missed.">                if (line.contains(found)) {</span>
-<span class="pc bpc" id="L214" title="1 of 2 branches missed.">                    line = found + &quot;,&quot; + newAmount;</span>
-<span class="nc" id="L215">                }</span>
-<span class="nc" id="L216">                writer.write(line + System.lineSeparator());</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">                if (line.contains(found)) {</span>
+<span class="fc" id="L214">                    line = found + &quot;,&quot; + newAmount;</span>
+                }
+<span class="fc" id="L216">                writer.write(line + System.lineSeparator());</span>
             }
-            reader.close();
+<span class="fc" id="L218">            reader.close();</span>
 <span class="nc" id="L219">        } catch (IOException e) {</span>
 <span class="nc" id="L220">            e.printStackTrace();</span>
-            return 0;
-        }
-<span class="fc" id="L223"></span>
+<span class="nc" id="L221">            return 0;</span>
+<span class="fc" id="L222">        }</span>
+
         // Replace the input file with the temporary file
-        if (inputFile.delete()) {
-            if (!tempFile.renameTo(inputFile)) {
-                System.err.println(&quot;Error renaming file&quot;);
-                tempFile.delete();
-                return 0;
-<span class="fc" id="L230">            }</span>
-<span class="fc" id="L231">        } else {</span>
-            System.err.println(&quot;Error deleting file&quot;);
-            tempFile.delete();
-<span class="fc bfc" id="L234" title="All 2 branches covered.">            return 0;</span>
-<span class="fc" id="L235">        }</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">        if (inputFile.delete()) {</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">            if (!tempFile.renameTo(inputFile)) {</span>
+<span class="nc" id="L227">                System.err.println(&quot;Error renaming file&quot;);</span>
+<span class="nc" id="L228">                tempFile.delete();</span>
+<span class="nc" id="L229">                return 0;</span>
+            }
+        } else {
+<span class="nc" id="L232">            System.err.println(&quot;Error deleting file&quot;);</span>
+<span class="nc" id="L233">            tempFile.delete();</span>
+<span class="nc" id="L234">            return 0;</span>
+        }
 
-        return 1;
-<span class="fc" id="L238">    }</span>
+<span class="fc" id="L237">        return 1;</span>
+    }
 
-<span class="fc bfc" id="L240" title="All 2 branches covered."></span>
-<span class="fc" id="L241"></span>
+
+
     private static void writeToLog(long id, String type, String currency, double amount) {
 <span class="fc" id="L243">        String fileName = &quot;data/log/&quot; + id + &quot;.txt&quot;;</span>
 <span class="fc" id="L244">        Path filePath = Paths.get(fileName);</span>
 
-<span class="fc" id="L246">        try {</span>
-            if (!Files.exists(filePath)) {
-<span class="fc" id="L248">                Files.createDirectories(filePath.getParent());Files.createFile(filePath);</span>
-<span class="nc" id="L249">            }</span>
-<span class="fc" id="L250"></span>
+        try {
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">            if (!Files.exists(filePath)) {</span>
+<span class="nc" id="L248">                Files.createDirectories(filePath.getParent());Files.createFile(filePath);</span>
+            }
+
 <span class="fc" id="L251">            List&lt;String&gt; lines = new ArrayList&lt;&gt;(Files.readAllLines(filePath, StandardCharsets.UTF_8));</span>
 
-            if (lines.size() &gt;= 10) {
+<span class="fc bfc" id="L253" title="All 2 branches covered.">            if (lines.size() &gt;= 10) {</span>
 <span class="fc" id="L254">                lines.remove(0);</span>
-<span class="fc" id="L255">            }</span>
-            LocalDateTime now = LocalDateTime.now();
-            String formattedDateTime = now.format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm&quot;));
-<span class="fc bfc" id="L258" title="All 2 branches covered."></span>
+            }
+<span class="fc" id="L256">            LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L257">            String formattedDateTime = now.format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm&quot;));</span>
+
 <span class="fc" id="L259">            lines.add(formattedDateTime + &quot; &quot; + type + &quot; &quot; + currency + &quot; &quot; + amount);</span>
 
 <span class="fc" id="L261">            Files.write(filePath, lines, StandardCharsets.UTF_8);</span>
-<span class="fc" id="L262">        } catch (IOException e) {e.printStackTrace();</span>
+<span class="nc" id="L262">        } catch (IOException e) {e.printStackTrace();</span>
 <span class="fc" id="L263">        }</span>
-<span class="nc" id="L264">    }</span>
+<span class="fc" id="L264">    }</span>
 
     public static List&lt;String&gt; readLog(long id) {
-        String fileName = &quot;data/log/&quot; + id + &quot;.txt&quot;;
-        Path filePath = Paths.get(fileName);
+<span class="fc" id="L267">        String fileName = &quot;data/log/&quot; + id + &quot;.txt&quot;;</span>
+<span class="fc" id="L268">        Path filePath = Paths.get(fileName);</span>
 
         try {
-            if (!Files.exists(filePath)) {
-                return Collections.emptyList();
+<span class="fc bfc" id="L271" title="All 2 branches covered.">            if (!Files.exists(filePath)) {</span>
+<span class="fc" id="L272">                return Collections.emptyList();</span>
             }
-            List&lt;String&gt; lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
-            Collections.reverse(lines);
-            return lines;
-        } catch (IOException e) {e.printStackTrace();return Collections.emptyList();
+<span class="fc" id="L274">            List&lt;String&gt; lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L275">            Collections.reverse(lines);</span>
+<span class="fc" id="L276">            return lines;</span>
+<span class="nc" id="L277">        } catch (IOException e) {e.printStackTrace();return Collections.emptyList();</span>
         }
     }
 

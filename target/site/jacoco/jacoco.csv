@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Bank,com.paclt.Bank.app.controller,ErrorController,0,20,0,4,0,7,0,4,0,2
-Bank,com.paclt.Bank.app.controller,AppController,348,24,18,0,92,8,14,4,5,4
+Bank,com.paclt.Bank.app.controller,AppController,359,136,18,10,95,31,15,13,6,8
 Bank,com.paclt.Bank.app.domain,ConfirmationToken,0,53,0,0,0,21,0,11,0,11
 Bank,com.paclt.Bank.app.domain,ExchangeRate,0,33,0,0,0,12,0,6,0,6
 Bank,com.paclt.Bank.app.domain,User,12,117,0,2,4,28,0,11,0,10
@@ -9,7 +9,7 @@ Bank,com.paclt.Bank.app.repository,AccountRepository,4,47,0,2,2,11,2,2,2,1
 Bank,com.paclt.Bank.app.repository,UserRepository,22,143,0,12,5,29,2,9,2,3
 Bank,com.paclt.Bank.app.repository,ConfirmationTokenRepository,6,136,0,8,3,29,0,7,0,3
 Bank,com.paclt.Bank.app.repository,ExchangeRateRepository,22,154,1,13,9,29,1,11,0,5
-Bank,com.paclt.Bank.app.service,UserService,92,553,7,57,20,133,7,32,0,7
+Bank,com.paclt.Bank.app.service,UserService,146,568,16,54,34,136,15,27,0,7
 Bank,com.paclt.Bank.app.service,CustomUserDetailsServiceImpl,81,50,7,3,22,14,5,4,0,4
 Bank,com.paclt.Bank.app.service,EmailService,40,10,0,0,12,4,1,2,1,2
 Bank,com.paclt.Bank.app.service,CustomUserDetailsService,14,10,0,0,6,4,6,2,6,2
