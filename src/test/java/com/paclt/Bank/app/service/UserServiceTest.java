@@ -321,7 +321,7 @@ class UserServiceTest {
             e.printStackTrace();
         }
     }
-*/
+
     @Test
     public void testPayment_insufficientBalance_returnsZero() throws IOException {
         File testAccountFile = new File("data/2.txt");
@@ -339,7 +339,7 @@ class UserServiceTest {
         Assertions.assertEquals(0, result, "Payment should fail");
     }
 
-  /*  @Test
+    @Test
     public void testPayment_invalidCurrencyType_returnsZero() throws IOException {
         File testAccountFile = new File("data/2.txt");
         // Write test data to the account file
