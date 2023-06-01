@@ -236,7 +236,3 @@ public class AppController {
         return handlePayment(amount, model, accountType, authentication);
     }
 }
-
-
-
-
