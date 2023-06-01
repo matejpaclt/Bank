@@ -117,7 +117,7 @@ public class AppController {
 
     }
 
-    private String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+    String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
         String name = authentication.getName();
         long id = UserRepository.getId(name);
         boolean success = false;
@@ -188,5 +188,11 @@ public class AppController {
 
         return "dashboard";
     }
+
+    public String handleTransactionWithdraw(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
+        // Perform necessary operations for "withdraw" action
+        // Call handlePayment method indirectly
+        return handlePayment(amount, model, accountType, authentication);
     }
+}
 
