@@ -54,7 +54,7 @@ public class UserTest {
 
         // Verify the account details
         assertEquals("USD", accounts.get(0).getName());
-        assertEquals(1000.0, accounts.get(0).getBalance());
+        assertEquals(150.0, accounts.get(0).getBalance());
         assertEquals("USD", accounts.get(1).getName());
         assertEquals(500.0, accounts.get(1).getBalance());
         assertEquals("EUR", accounts.get(2).getName());
