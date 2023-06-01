@@ -172,7 +172,7 @@ public class UserService {
                         break;
                     }
                 }
-           } } else {
+            } else {
                 while ((line = reader.readLine()) != null) {
                     if (line.contains(type)) {
                         String[] parts = line.split(",");
@@ -192,7 +192,6 @@ public class UserService {
                     }
                 }
             }
-
             reader.close();
             if (!foundType) {
                 return 0;
@@ -235,7 +234,6 @@ public class UserService {
 
         return 1;
     }
-
 
 
 
