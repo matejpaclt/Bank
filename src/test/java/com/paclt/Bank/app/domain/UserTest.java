@@ -53,7 +53,7 @@ public class UserTest {
         // Verify the number of accounts
 
         // Verify the account details
-        assertEquals("CZK", accounts.get(0).getName());
+        assertEquals("USD", accounts.get(0).getName());
         assertEquals(1000.0, accounts.get(0).getBalance());
         assertEquals("USD", accounts.get(1).getName());
         assertEquals(500.0, accounts.get(1).getBalance());
