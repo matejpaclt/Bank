@@ -186,7 +186,7 @@ public class UserService {
                         }
                         if (newAmount < negativeThreshold) {
                             // Adjust newAmount to be at the negativeThreshold
-                            newAmount = negativeThreshold;
+                            newAmount = Math.max(newAmount, negativeThreshold);
                         }
                         break;
                     }
