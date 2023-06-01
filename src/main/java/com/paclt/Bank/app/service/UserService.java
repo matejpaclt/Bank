@@ -157,7 +157,7 @@ public class UserService {
                             newAmount = balance - amount;
                             double negativeBalance = Math.max(newAmount, -balance);
                             double interest = negativeBalance * 0.1;
-                            newAmount -= interest;
+                            newAmount += interest;
                         } else {
                             found = "CZK";
                             amount = calculateExchange(type, amount);
@@ -177,15 +177,14 @@ public class UserService {
                         balance = Double.parseDouble(parts[1].trim());
                         foundType = true;
                         found = "CZK";
-                        double negativeThreshold = -balance * 0.1;
-                        newAmount = balance - amount;
-                        if (newAmount < negativeThreshold) {
-                            double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
-                            newAmount -= interest;
-                        }
-                        if (newAmount < negativeThreshold) {
-                            // Adjust newAmount to be at the negativeThreshold
-                            newAmount = Math.max(newAmount, negativeThreshold);
+                        if (balance >= amount) {
+                            newAmount = balance - amount;
+                        } else if ((balance + (balance * 0.1)) >= amount) {
+                            // Calculate negative balance and interest
+                            newAmount = balance - amount;
+                            double negativeBalance = Math.max(newAmount, -balance);
+                            double interest = negativeBalance * 0.1;
+                            newAmount += interest;
                         }
                         break;
                     }
@@ -234,6 +233,7 @@ public class UserService {
 
         return 1;
     }
+
 
 
     private static void writeToLog(long id, String type, String currency, double amount) {
