@@ -31,7 +31,6 @@ jobs:
 
       - name: Commit the badge (if it changed)
         run: |
-          git pull
           if [[ `git status --porcelain` ]]; then
             git config --global user.name 'matejpaclt'
             git config --global user.email '92588479@users.noreply.github.com'
