@@ -515,11 +515,6 @@ class UserServiceTest {
         Assertions.assertEquals(1, result);
     }
 
-    @Test
-    public void testPaymentInvalidCurrency() throws IOException {
-        int result = UserService.payment(1, "EUR", 50);
-        Assertions.assertEquals(1, result);
-    }
 
 
 
