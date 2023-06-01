@@ -154,10 +154,14 @@ public class UserService {
                         newAmount = balance - amount;
                     } else if ((balance + (balance * 0.1)) >= amount) {
                         // Calculate negative balance and interest
-                        newAmount = balance - amount;
-                        double negativeBalance = Math.max(newAmount, -balance);
-                        double interest = negativeBalance * 0.1;
-                        newAmount -= interest;
+                        double negativeBalance = Math.max(balance, -balance);
+                        double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
+                        if (amount < negativeThreshold) {
+                            newAmount = balance - amount - (negativeBalance * 0.1);
+                        } else {
+                            System.err.println("Insufficient funds for payment");
+                            return 0;
+                        }
                     } else {
                         found = "CZK";
                         amount = calculateExchange(type, amount);
@@ -216,10 +220,11 @@ public class UserService {
         reader.close();
     } catch (IOException e) {
         e.printStackTrace();
+        tempFile.delete();
         return 0;
     }
 
-    // Replace the input file with the temporary file
+    // Replace input file with temporary file
     if (inputFile.delete()) {
         if (!tempFile.renameTo(inputFile)) {
             System.err.println("Error renaming file");
@@ -234,8 +239,6 @@ public class UserService {
 
     return 1;
 }
-
-
 
     private static void writeToLog(long id, String type, String currency, double amount) {
         String fileName = "data/log/" + id + ".txt";
