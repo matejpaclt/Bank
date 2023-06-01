@@ -3,11 +3,11 @@ package com.paclt.Bank.app.controller;
 import com.paclt.Bank.app.domain.Account;
 import com.paclt.Bank.app.domain.ExchangeRate;
 import com.paclt.Bank.app.domain.User;
-import com.paclt.Bank.app.repository.AccountRepository;
-import com.paclt.Bank.app.repository.ExchangeRateRepository;
-import com.paclt.Bank.app.repository.UserRepository;
-import com.paclt.Bank.app.service.CustomUserDetailsServiceImpl;
-import com.paclt.Bank.app.service.UserService;
+import import com.paclt.Bank.app.repository.AccountRepository;
+import import com.paclt.Bank.app.repository.ExchangeRateRepository;
+import import com.paclt.Bank.app.repository.UserRepository;
+import import com.paclt.Bank.app.service.CustomUserDetailsServiceImpl;
+import import com.paclt.Bank.app.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,12 +58,6 @@ public class AppController {
             sum += number;
         }
         return (double) sum / numbers.length;
-    }
-
-    private final CustomUserDetailsServiceImpl customUserDetailsService;
-
-    public AppController(CustomUserDetailsServiceImpl customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
     }
 
     @GetMapping("")
