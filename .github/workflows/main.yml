@@ -31,7 +31,9 @@ jobs:
 
       - name: Commit the badge (if it changed)
         run: |
+          git stash
           git pull
+          git stash apply
           if [[ `git status --porcelain` ]]; then
             git config --global matejpaclt 'YOUR NAME HERE'
             git config --global matej.paclt@tul.cz '92588479@users.noreply.github.com'
