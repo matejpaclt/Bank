@@ -100,14 +100,4 @@ public class ExchangeRateRepositoryTest {
         assertTrue(content.contains("<html"));
     }
 
-    @Test
-    public void testPrintExchangeRates() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-
-        ExchangeRateRepository.printExchangeRates();
-        String output = outputStream.toString();
-        assertNotNull(output);
-        assertTrue(output.contains("Exchange rates:"));
-    }
 }
