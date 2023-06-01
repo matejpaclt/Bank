@@ -8,8 +8,8 @@ Bank,com.paclt.Bank.app.domain,Account,6,21,0,0,1,6,1,3,1,3
 Bank,com.paclt.Bank.app.repository,AccountRepository,4,47,0,2,2,11,2,2,2,1
 Bank,com.paclt.Bank.app.repository,UserRepository,22,143,0,12,5,29,2,9,2,3
 Bank,com.paclt.Bank.app.repository,ConfirmationTokenRepository,6,136,0,8,3,29,0,7,0,3
-Bank,com.paclt.Bank.app.repository,ExchangeRateRepository,22,154,1,13,9,29,1,11,0,5
-Bank,com.paclt.Bank.app.service,UserService,140,574,14,56,34,136,14,28,0,7
+Bank,com.paclt.Bank.app.repository,ExchangeRateRepository,14,162,1,13,6,32,1,11,0,5
+Bank,com.paclt.Bank.app.service,UserService,135,579,14,56,32,138,14,28,0,7
 Bank,com.paclt.Bank.app.service,CustomUserDetailsServiceImpl,81,50,7,3,22,14,5,4,0,4
 Bank,com.paclt.Bank.app.service,EmailService,40,10,0,0,12,4,1,2,1,2
 Bank,com.paclt.Bank.app.service,CustomUserDetailsService,14,10,0,0,6,4,6,2,6,2

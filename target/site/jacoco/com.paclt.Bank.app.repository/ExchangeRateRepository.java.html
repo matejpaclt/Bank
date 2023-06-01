@@ -64,10 +64,10 @@ import org.springframework.stereotype.Repository;
     public static String[][] readExchangeFile() throws IOException {
         List&lt;String&gt; lines;
         try {
-<span class="fc" id="L67">            lines = Files.readAllLines(Paths.get(&quot;src/main/resources/ExchangeRate.txt&quot;), StandardCharsets.ISO_8859_1);</span>
-<span class="nc" id="L68">        } catch (IOException e) {</span>
-<span class="nc" id="L69">            System.err.println(&quot;Error reading the file: &quot; + e.getMessage());</span>
-<span class="nc" id="L70">            throw e;</span>
+<span class="fc" id="L67">            lines = Files.readAllLines(Paths.get(&quot;src/main/resources/exchangeRate.txt&quot;), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L68">        } catch (IOException e) {</span>
+<span class="fc" id="L69">            System.err.println(&quot;Error reading the file: &quot; + e.getMessage());</span>
+<span class="fc" id="L70">            throw e;</span>
 <span class="fc" id="L71">        }</span>
 
 <span class="fc" id="L73">        List&lt;String[]&gt; outputList = new ArrayList&lt;&gt;();</span>

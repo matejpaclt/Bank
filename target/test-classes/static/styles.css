@@ -1,0 +1,213 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #eeeeee;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #142d4c;
+    color: #fff;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+/* Login Container */
+.login-container {
+    max-width: 500px;
+    min-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin: 10px;
+}
+
+form div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form input[type="text"]:focus,
+form input[type="password"]:focus {
+    outline: none;
+    border-color: #142d4c;
+}
+
+/* Error */
+.error {
+    color: red;
+    font-size: 0.9em;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+/* Button */
+button[type="submit"] {
+    padding: 8px 16px;
+    border: none;
+    background-color: #142d4c;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+button[type="submit"]:hover {
+    background-color: #142d4c;
+}
+
+.leftCol {
+    width: 80px;
+    margin: 0;
+    flex: 1;
+}
+
+.rightCol {
+    margin-left: 8px;
+    flex: 1;
+}
+.bank-name {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.logoutSection {
+    margin: 0;
+}
+
+.mainContent {
+    padding: 16px;
+    display: flex;
+}
+.box {
+    flex: 1;
+    margin: 10px;
+    border-radius: 4px;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+}
+.info-table{
+    width: 100%;
+    text-align: center;
+}
+.info-table th,
+.info-table td {
+    padding: 10px;
+}
+form input,
+form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+.logs {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 400px;
+    margin: 0;
+}
+
+.logs p {
+    margin: 0;
+    padding: 4px;
+    color: #000000;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.fill-out-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+    width: 50%;
+}
+
+.fill-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-button {
+    padding: 12px 120px;
+    border: none;
+    background-color: #142d4c;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 4px;
+    font-size: 1em;
+    margin: 15px;
+}
+
+.submit-button:hover {
+    background-color: #142d4c;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
