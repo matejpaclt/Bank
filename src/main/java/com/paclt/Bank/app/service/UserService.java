@@ -172,27 +172,27 @@ public class UserService {
                         break;
                     }
                 }
-           } else {
-            while ((line = reader.readLine()) != null) {
-                if (line.contains(type)) {
-                    String[] parts = line.split(",");
-                    balance = Double.parseDouble(parts[1].trim());
-                    foundType = true;
-                    found = "CZK";
-                    double negativeThreshold = -balance * 0.1;
-                    if (balance < 0 && newAmount < negativeThreshold) {
-                        double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
-                        newAmount -= interest;
+           } } else {
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains(type)) {
+                        String[] parts = line.split(",");
+                        balance = Double.parseDouble(parts[1].trim());
+                        foundType = true;
+                        found = "CZK";
+                        double negativeThreshold = -balance * 0.1;
+                        if (balance < 0 && newAmount < negativeThreshold) {
+                            double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
+                            newAmount -= interest;
+                        }
+                        if (newAmount < negativeThreshold) {
+                            // Adjust newAmount to be at the negativeThreshold
+                            newAmount = negativeThreshold;
+                        }
+                        break;
                     }
-                    if (newAmount < negativeThreshold) {
-                        // Check if the newAmount exceeds the negativeThreshold after applying interest
-                        // If it does, adjust the newAmount to be at the negativeThreshold
-                        newAmount = negativeThreshold;
-                    }
-                    break;
                 }
             }
-        }
+
             reader.close();
             if (!foundType) {
                 return 0;
