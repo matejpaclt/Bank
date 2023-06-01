@@ -185,6 +185,9 @@ public class UserService {
                             double negativeBalance = Math.max(newAmount, -balance);
                             double interest = negativeBalance * 0.1;
                             newAmount += interest;
+                        } else {
+                            System.err.println("Insufficient funds for payment");
+                            return 0;
                         }
                         break;
                     }
