@@ -15,6 +15,7 @@ public class AccountRepositoryTest {
         Assertions.assertTrue(accounts.isEmpty());
     }
 
+    
     @Test
     public void testFindAccountsByUserId() {
         long userId = 4;
