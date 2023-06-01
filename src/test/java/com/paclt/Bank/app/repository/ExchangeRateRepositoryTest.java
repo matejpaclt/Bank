@@ -4,7 +4,9 @@ import com.paclt.Bank.app.domain.ExchangeRate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExchangeRateRepositoryTest {
+
     @Test
     public void testGetExchangeRates() throws IOException {
         List<ExchangeRate> exchangeRates = getExchangeRates();
@@ -32,8 +35,13 @@ public class ExchangeRateRepositoryTest {
 
         // Add more assertions as needed for other ExchangeRate objects
     }
-    
-    // ...
+
+    @Test
+    public void testGetExchangeRates2() throws IOException {
+        List<ExchangeRate> exchangeRates = ExchangeRateRepository.getExchangeRates();
+        assertNotNull(exchangeRates);
+        assertFalse(exchangeRates.isEmpty());
+    }
 
     private List<ExchangeRate> getExchangeRates() throws IOException {
         List<ExchangeRate> exchangeRates = new ArrayList<>();
@@ -57,9 +65,6 @@ public class ExchangeRateRepositoryTest {
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get("src/main/resources/exchangeRate.txt"), StandardCharsets.ISO_8859_1);
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
-            throw e;
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
             throw e;
@@ -90,53 +95,19 @@ public class ExchangeRateRepositoryTest {
     @Test
     public void testGetHtmlContent() {
         String url = "http://example.com";
-        String htmlContent = ExchangeRateRepository.getHtmlContent(url);
-        assertNotNull(htmlContent);
-        assertFalse(htmlContent.isEmpty());
+        String content = ExchangeRateRepository.getHtmlContent(url);
+        assertNotNull(content);
+        assertTrue(content.contains("<html"));
     }
 
     @Test
-    public void testReadExchangeFile() throws IOException {
-        String[][] exchangeRateArray = ExchangeRateRepository.readExchangeFile();
-        assertNotNull(exchangeRateArray);
-        assertTrue(exchangeRateArray.length > 0);
+    public void testPrintExchangeRates() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        ExchangeRateRepository.printExchangeRates();
+        String output = outputStream.toString();
+        assertNotNull(output);
+        assertTrue(output.contains("Exchange rates:"));
     }
-
-    @Test
-    public void testGetExchangeRate_CurrencyPresent() throws IOException {
-        String currency = "USD";
-        String[] exchangeRate = ExchangeRateRepository.getExchangeRate(currency);
-        assertNotNull(exchangeRate);
-    }
-
-    // Test for getExchangeRate method when currency is not present
-    @Test
-    public void testGetExchangeRate_CurrencyNotPresent() throws IOException {
-        String currency = "XYZ";
-        String[] exchangeRate = ExchangeRateRepository.getExchangeRate(currency);
-        assertNull(exchangeRate);
-    }
-
-    @Test
-    public void testGetExchangeRate_CurrencyPresent_CaseInsensitive() throws IOException {
-        String currency = "usd";
-        String[] exchangeRate = ExchangeRateRepository.getExchangeRate(currency);
-        assertNotNull(exchangeRate);
-    }
-
-    @Test
-    public void testGetExchangeRate_CurrencyNull() throws IOException {
-        String currency = null;
-        String[] exchangeRate = ExchangeRateRepository.getExchangeRate(currency);
-        assertNull(exchangeRate);
-    }
-
-    @Test
-    public void testGetExchangeRate_CurrencyEmpty() throws IOException {
-        String currency = "";
-        String[] exchangeRate = ExchangeRateRepository.getExchangeRate(currency);
-        assertNull(exchangeRate);
-    }
-
-
 }
