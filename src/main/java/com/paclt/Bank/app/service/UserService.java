@@ -139,60 +139,37 @@ public class UserService {
     try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
         String line;
         boolean foundType = false;
-        if (!type.equals("CZK")) {
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("CZK")) {
-                    String[] parts = line.split(",");
-                    czkBalance = Double.parseDouble(parts[1].trim());
-                }
-                if (line.contains(type)) {
-                    String[] parts = line.split(",");
-                    balance = Double.parseDouble(parts[1].trim());
-                    foundType = true;
-                    found = type;
-                    if (balance >= amount) {
-                        newAmount = balance - amount;
-                    } else if ((balance + (balance * 0.1)) >= amount) {
-                        // Calculate negative balance and interest
-                        double negativeBalance = Math.max(balance, -balance);
-                        double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
-                        if (amount < negativeThreshold) {
-                            newAmount = balance - amount - (negativeBalance * 0.1);
-                        } else {
-                            System.err.println("Insufficient funds for payment");
-                            return 0;
-                        }
-                    } else {
-                        found = "CZK";
-                        amount = calculateExchange(type, amount);
-                        newAmount = czkBalance - amount;
-                        if (newAmount < 0 || czkBalance - amount < 0) {
-                            System.err.println("Insufficient funds for payment");
-                            return 0;
-                        }
-                    }
-                    break;
-                }
-            }
-        } else {
-            while ((line = reader.readLine()) != null) {
-                if (line.contains(type)) {
-                    String[] parts = line.split(",");
-                    balance = Double.parseDouble(parts[1].trim());
-                    foundType = true;
-                    found = "CZK";
-                    double negativeThreshold = -balance * 0.1;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains(type)) {
+                String[] parts = line.split(",");
+                balance = Double.parseDouble(parts[1].trim());
+                foundType = true;
+                found = type;
+                if (balance >= amount) {
                     newAmount = balance - amount;
-                    if (newAmount < negativeThreshold) {
-                        double interest = Math.abs(newAmount - negativeThreshold) * 0.1;
-                        newAmount -= interest;
+                } else if ((balance + (balance * 0.1)) >= amount) {
+                    // Calculate negative balance and interest
+                    double negativeBalance = Math.max(balance, -balance);
+                    double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
+                    if (amount < negativeThreshold) {
+                        newAmount = balance - amount - (negativeBalance * 0.1);
+                    } else {
+                        System.err.println("Insufficient funds for payment");
+                        return 0;
                     }
-                    if (newAmount < negativeThreshold) {
-                        // Adjust newAmount to be at the negativeThreshold
-                        newAmount = Math.max(newAmount, negativeThreshold);
+                } else {
+                    found = "CZK";
+                    amount = calculateExchange(type, amount);
+                    newAmount = czkBalance - amount;
+                    if (newAmount < 0 || czkBalance - amount < 0) {
+                        System.err.println("Insufficient funds for payment");
+                        return 0;
                     }
-                    break;
                 }
+                break;
+            } else if (line.contains("CZK")) {
+                String[] parts = line.split(",");
+                czkBalance = Double.parseDouble(parts[1].trim());
             }
         }
         reader.close();
@@ -239,7 +216,6 @@ public class UserService {
 
     return 1;
 }
-
     private static void writeToLog(long id, String type, String currency, double amount) {
         String fileName = "data/log/" + id + ".txt";
         Path filePath = Paths.get(fileName);
