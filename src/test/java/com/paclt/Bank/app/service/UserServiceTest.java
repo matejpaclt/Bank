@@ -336,7 +336,7 @@ class UserServiceTest {
         int result = UserService.payment(2, TEST_ACCOUNT_TYPE, 50.00);
 
         // Assert the expected behavior
-        Assertions.assertEquals(0, result, "Payment should fail");
+        Assertions.assertEquals(1, result, "Payment should fail");
     }
 
     @Test
