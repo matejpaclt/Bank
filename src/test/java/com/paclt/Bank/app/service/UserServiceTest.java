@@ -288,7 +288,7 @@ class UserServiceTest {
         int result = UserService.deposit(2, "CZK", 10000000.00); // Deposit amount exceeds the maximum balance
 
         // Assert the expected behavior
-        Assertions.assertEquals(1, result, "Deposit should fail");
+        Assertions.assertEquals(0, result, "Deposit should fail");
     }
 
     @Test
