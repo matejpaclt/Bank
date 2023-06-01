@@ -38,7 +38,26 @@ public static void bubbleSort(int[] array) {
         }
     }
 }
-
+    public static void reverseArray(int[] array) {
+        int start = 0;
+        int end = array.length - 1;
+        while (start < end) {
+            int temp = array[start];
+            array[start] = array[end];
+            array[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}
+    public static double calculateAverage(int[] numbers) {
+        int sum = 0;
+        for (int number : numbers) {
+            sum += number;
+        }
+        return (double) sum / numbers.length;
+    }
+}
     private final CustomUserDetailsServiceImpl customUserDetailsService;
 
     public AppController(CustomUserDetailsServiceImpl customUserDetailsService) {
