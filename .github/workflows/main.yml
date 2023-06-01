@@ -24,10 +24,13 @@ jobs:
       - name: Run Maven Tests
         run: mvn test
 
-      - name: Commit and Push Files
+      - name: Configure Git
         run: |
           git config --local user.name "matejpaclt"
           git config --local user.email "matej.paclt@tul.cz"
+
+      - name: Commit and Push Files
+        run: |
           git add .
           git commit -m "Add test results"
           git push
