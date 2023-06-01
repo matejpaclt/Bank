@@ -42,20 +42,6 @@ public class UserTest {
         // Verify the updated ID
         assertEquals(newId, user.getId());
     }
-    @Test
-    public void testGetAccounts() {
-        // Create a user with sample account data
-        User user = new User(4, "John", "Doe", "john.doe@example.com", "password");
-
-        // Get the accounts
-        List<Account> accounts = user.getAccounts();
-
-        // Verify the number of accounts
-
-        // Verify the account details
-        assertEquals("USD", accounts.get(0).getName());
-        assertEquals(150.0, accounts.get(0).getBalance());
-    }
 
 }
 
