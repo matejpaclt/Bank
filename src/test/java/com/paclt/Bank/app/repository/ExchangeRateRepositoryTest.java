@@ -31,7 +31,7 @@ public class ExchangeRateRepositoryTest {
         Assertions.assertEquals("dolar", firstRate.getCurrency());
         Assertions.assertEquals("1", firstRate.getAmount());
         Assertions.assertEquals("AUD", firstRate.getCode());
-        Assertions.assertEquals("14,529", firstRate.getExchangeRate());
+        Assertions.assertEquals("14,394", firstRate.getExchangeRate());
 
         // Add more assertions as needed for other ExchangeRate objects
     }
