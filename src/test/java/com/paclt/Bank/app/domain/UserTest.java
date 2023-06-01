@@ -45,7 +45,7 @@ public class UserTest {
     @Test
     public void testGetAccounts() {
         // Create a user with sample account data
-        User user = new User(5, "John", "Doe", "john.doe@example.com", "password");
+        User user = new User(4, "John", "Doe", "john.doe@example.com", "password");
 
         // Get the accounts
         List<Account> accounts = user.getAccounts();
@@ -53,12 +53,12 @@ public class UserTest {
         // Verify the number of accounts
 
         // Verify the account details
-        assertEquals("USD", accounts.get(0).getName());
+        assertEquals("CZK", accounts.get(0).getName());
         assertEquals(1000.0, accounts.get(0).getBalance());
         assertEquals("USD", accounts.get(1).getName());
-        assertEquals(500.0, accounts.get(1).getBalance());
+        assertEquals(400.0, accounts.get(1).getBalance());
         assertEquals("EUR", accounts.get(2).getName());
-        assertEquals(750.0, accounts.get(2).getBalance());
+        assertEquals(640.0, accounts.get(2).getBalance());
     }
 
 }
