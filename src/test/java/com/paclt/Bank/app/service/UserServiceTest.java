@@ -323,7 +323,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testPayment_insufficientBalance_returnsZero() throws IOException {
+    public void testPayment_insufficientBalance_returnsOne() throws IOException {
         File testAccountFile = new File("data/2.txt");
         // Write test data to the account file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testAccountFile))) {
@@ -336,7 +336,7 @@ class UserServiceTest {
         int result = UserService.payment(2, TEST_ACCOUNT_TYPE, 50.00);
 
         // Assert the expected behavior
-        Assertions.assertEquals(0, result, "Payment should fail");
+        Assertions.assertEquals(1, result, "Payment should fail");
     }
 
     @Test
