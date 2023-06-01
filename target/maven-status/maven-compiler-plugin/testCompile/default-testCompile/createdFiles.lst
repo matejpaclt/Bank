@@ -8,8 +8,8 @@ com/paclt/Bank/app/domain/AccountTest.class
 com/paclt/Bank/app/repository/ExchangeRateRepositoryTest.class
 com/paclt/Bank/app/controller/ErrorControllerTest.class
 com/paclt/Bank/app/service/CustomUserDetailsServiceImplTest.class
-com/paclt/Bank/app/service/ExchangeRateServiceTest.class
 com/paclt/Bank/app/repository/AccountRepositoryTest.class
+com/paclt/Bank/app/service/ExchangeRateServiceTest.class
 com/paclt/Bank/app/controller/AppControllerTest.class
 com/paclt/Bank/BankApplicationTests.class
 com/paclt/Bank/app/service/ConfirmationTokenServiceTest.class
