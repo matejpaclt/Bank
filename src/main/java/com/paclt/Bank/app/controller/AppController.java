@@ -111,25 +111,24 @@ public class AppController {
                     message = "Vklad se nezdařil. Po vkladu by Váš účet přesahoval horní limity množství uložených peněz.";
                 }
             }
-            } catch (IOException e) {
-                System.out.println("Error: " + e);
-            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
 
-            User user = UserRepository.findUser(id);
-            model.addAttribute("user", user);
-            List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
-            model.addAttribute("listAccounts", listAccounts);
-            List<String> listOfLogs = UserService.readLog(user.getId());
-            model.addAttribute("listOfLogs", listOfLogs);
-            model.addAttribute("show", true);
-            model.addAttribute("success", success);
-            model.addAttribute("message", message);
+        User user = UserRepository.findUser(id);
+        model.addAttribute("user", user);
+        List<Account> listAccounts = AccountRepository.findAccountsByUserId(user.getId());
+        model.addAttribute("listAccounts", listAccounts);
+        List<String> listOfLogs = UserService.readLog(user.getId());
+        model.addAttribute("listOfLogs", listOfLogs);
+        model.addAttribute("show", true);
+        model.addAttribute("success", success);
+        model.addAttribute("message", message);
 
-            List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
-            model.addAttribute("listExchangeRates", listExchangeRates);
+        List<ExchangeRate> listExchangeRates = ExchangeRateRepository.getExchangeRates();
+        model.addAttribute("listExchangeRates", listExchangeRates);
 
-            return "dashboard";
-
+        return "dashboard";
     }
 
     String handlePayment(BigDecimal amount, Model model, String accountType, Authentication authentication) throws IOException {
@@ -209,6 +208,6 @@ public class AppController {
         // Call handlePayment method indirectly
         return handlePayment(amount, model, accountType, authentication);
     }
-
 }
+
 
