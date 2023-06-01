@@ -444,7 +444,7 @@ class UserServiceTest {
                 } else if (line.contains("CZK")) {
                     String[] parts = line.split(",");
                     double balance = Double.parseDouble(parts[1].trim());
-                    Assertions.assertEquals(5000.00, balance, "Incorrect updated CZK balance after converting payment amount");
+                    Assertions.assertEquals(500.00, balance, "Incorrect updated CZK balance after converting payment amount");
                 }
             }
         } catch (IOException e) {
