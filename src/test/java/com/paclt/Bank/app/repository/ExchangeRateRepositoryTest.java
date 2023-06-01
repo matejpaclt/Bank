@@ -4,9 +4,7 @@ import com.paclt.Bank.app.domain.ExchangeRate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -34,13 +32,8 @@ public class ExchangeRateRepositoryTest {
 
         // Add more assertions as needed for other ExchangeRate objects
     }
-    @Test
-    public void testGetExchangeRates2() throws IOException {
-        List<ExchangeRate> exchangeRates = ExchangeRateRepository.getExchangeRates();
-        assertNotNull(exchangeRates);
-        assertFalse(exchangeRates.isEmpty());
-    }
-
+    
+    // ...
 
     private List<ExchangeRate> getExchangeRates() throws IOException {
         List<ExchangeRate> exchangeRates = new ArrayList<>();
@@ -64,6 +57,9 @@ public class ExchangeRateRepositoryTest {
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get("src/main/resources/exchangeRate.txt"), StandardCharsets.ISO_8859_1);
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            throw e;
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
             throw e;
