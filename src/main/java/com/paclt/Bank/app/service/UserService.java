@@ -127,97 +127,97 @@ public class UserService {
         return 1;
     }
     public static int payment(long id, String type, double amount) throws IOException {
-    // Define input and temporary files
-    File inputFile = new File("data/" + id + ".txt");
-    File tempFile = new File("data/" + id + "_temp.txt");
-    String found = null;
-    double newAmount = 0;
-    double balance = 0;
-    double czkBalance = 0;
+        // Define input and temporary files
+        File inputFile = new File("data/" + id + ".txt");
+        File tempFile = new File("data/" + id + "_temp.txt");
+        String found = null;
+        double newAmount = 0;
+        double balance = 0;
+        double czkBalance = 0;
 
-    // Read input file to determine the account balance
-    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
-        String line;
-        boolean foundType = false;
-        while ((line = reader.readLine()) != null) {
-            if (line.contains(type)) {
-                String[] parts = line.split(",");
-                balance = Double.parseDouble(parts[1].trim());
-                foundType = true;
-                found = type;
-                if (balance >= amount) {
-                    newAmount = balance - amount;
-                } else if ((balance + (balance * 0.1)) >= amount) {
-                    // Calculate negative balance and interest
-                    double negativeBalance = Math.max(balance, -balance);
-                    double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
-                    if (amount < negativeThreshold) {
+        // Read input file to determine the account balance
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+            String line;
+            boolean foundType = false;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(type)) {
+                    String[] parts = line.split(",");
+                    balance = Double.parseDouble(parts[1].trim());
+                    foundType = true;
+                    found = type;
+                    if (balance >= amount) {
                         newAmount = balance - amount;
-                        double interest = negativeBalance * 0.1;
-                        newAmount -= interest;
+                    } else if ((balance + (balance * 0.1)) >= amount) {
+                        // Calculate negative balance and interest
+                        double negativeBalance = Math.min(balance, 0);
+                        double negativeThreshold = negativeBalance + (negativeBalance * 0.1);
+                        if (amount < negativeThreshold) {
+                            newAmount = balance - amount;
+                            double interest = negativeBalance * 0.1;
+                            newAmount -= interest;
+                        } else {
+                            System.err.println("Insufficient funds for payment");
+                            return 0;
+                        }
                     } else {
-                        System.err.println("Insufficient funds for payment");
-                        return 0;
+                        found = "CZK";
+                        amount = calculateExchange(type, amount);
+                        newAmount = czkBalance - amount;
+                        if (newAmount < 0 || czkBalance - amount < 0) {
+                            System.err.println("Insufficient funds for payment");
+                            return 0;
+                        }
                     }
-                } else {
-                    found = "CZK";
-                    amount = calculateExchange(type, amount);
-                    newAmount = czkBalance - amount;
-                    if (newAmount < 0 || czkBalance - amount < 0) {
-                        System.err.println("Insufficient funds for payment");
-                        return 0;
-                    }
+                    break;
+                } else if (line.contains("CZK")) {
+                    String[] parts = line.split(",");
+                    czkBalance = Double.parseDouble(parts[1].trim());
                 }
-                break;
-            } else if (line.contains("CZK")) {
-                String[] parts = line.split(",");
-                czkBalance = Double.parseDouble(parts[1].trim());
             }
-        }
-        reader.close();
-        if (!foundType) {
-            System.err.println("Account type not found");
+            reader.close();
+            if (!foundType) {
+                System.err.println("Account type not found");
+                return 0;
+            }
+
+            writeToLog(id, "-", found, amount);
+        } catch (IOException e) {
+            e.printStackTrace();
             return 0;
         }
 
-        writeToLog(id, "-", found, amount);
-    } catch (IOException e) {
-        e.printStackTrace();
-        return 0;
-    }
-
-    // Read input file and write to temporary file
-    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (line.contains(found)) {
-                line = found + "," + newAmount;
+        // Read input file and write to temporary file
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(found)) {
+                    line = found + "," + newAmount;
+                }
+                writer.write(line + System.lineSeparator());
             }
-            writer.write(line + System.lineSeparator());
-        }
-        reader.close();
-    } catch (IOException e) {
-        e.printStackTrace();
-        tempFile.delete();
-        return 0;
-    }
-
-    // Replace input file with temporary file
-    if (inputFile.delete()) {
-        if (!tempFile.renameTo(inputFile)) {
-            System.err.println("Error renaming file");
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
             tempFile.delete();
             return 0;
         }
-    } else {
-        System.err.println("Error deleting file");
-        tempFile.delete();
-        return 0;
-    }
 
-    return 1;
-}
+        // Replace input file with temporary file
+        if (inputFile.delete()) {
+            if (!tempFile.renameTo(inputFile)) {
+                System.err.println("Error renaming file");
+                tempFile.delete();
+                return 0;
+            }
+        } else {
+            System.err.println("Error deleting file");
+            tempFile.delete();
+            return 0;
+        }
+
+        return 1;
+    }
 
     private static void writeToLog(long id, String type, String currency, double amount) {
         String fileName = "data/log/" + id + ".txt";
